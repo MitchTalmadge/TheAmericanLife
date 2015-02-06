@@ -1,5 +1,7 @@
 package me.MitchT.AmericanLife;
 
+import me.MitchT.AmericanLife.MainMenu.MainMenu;
+
 public class Main
 {
     
