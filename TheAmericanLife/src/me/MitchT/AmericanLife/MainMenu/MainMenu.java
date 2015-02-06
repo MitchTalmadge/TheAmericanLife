@@ -1,7 +1,9 @@
 package me.MitchT.AmericanLife.MainMenu;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -35,11 +37,13 @@ public class MainMenu extends JFrame implements ButtonPanelListener
         BufferedImage menuIcons = null;
         BufferedImage logoIcon = null;
         BufferedImage backgroundIcon = null;
+        BufferedImage creditsIcon = null;
         try
         {
             menuIcons = ImageIO.read(getClass().getResource("/assets/images/MenuIcons.png"));
             logoIcon = ImageIO.read(getClass().getResource("/assets/images/LogoIcon.png"));
             backgroundIcon = ImageIO.read(getClass().getResource("/assets/images/BackgroundIcon.png"));
+            creditsIcon = ImageIO.read(getClass().getResource("/assets/images/CreditsIcon.png"));
         }
         catch(IOException e)
         {
@@ -66,6 +70,15 @@ public class MainMenu extends JFrame implements ButtonPanelListener
         
         JLabel logoLabel = new JLabel(new ImageIcon(logoIcon));
         logoPanel.add(logoLabel, BorderLayout.CENTER);
+        
+        //---- CREDITS ----//
+        
+        JPanel creditsPanel = new JPanel();
+        creditsPanel.setOpaque(false);
+        creditsPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        JLabel creditsLabel = new JLabel(new ImageIcon(creditsIcon));
+        creditsPanel.add(creditsLabel);
+        getContentPane().add(creditsPanel, BorderLayout.SOUTH);
         
         //---- BUTTONS ----//
         JButtonPanel buttonPanel = new JButtonPanel(menuIcons, 3);
