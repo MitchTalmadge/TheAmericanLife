@@ -1,38 +1,29 @@
 package me.MitchT.AmericanLife.MainMenu;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.advanced.AdvancedPlayer;
 import me.MitchT.AmericanLife.Game;
+import me.MitchT.AmericanLife.Main;
 
 public class MainMenu extends JFrame implements ButtonPanelListener
 {
     
     public MainMenu()
     {
+        Main.getAudioManager().play("/assets/music/TheEntertainer.mp3");
         
         BufferedImage menuIcons = null;
         BufferedImage logoIcon = null;

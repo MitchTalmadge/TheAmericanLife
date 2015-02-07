@@ -1,28 +1,21 @@
 package me.MitchT.AmericanLife;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
+import me.MitchT.AmericanLife.Audio.AudioManager;
 import me.MitchT.AmericanLife.MainMenu.MainMenu;
 
 public class Main
 {
+    private static AudioManager audioManager;
     
     public static void main(String[] args)
     {
+        audioManager = new AudioManager();
         new MainMenu().setVisible(true);
-        playSound();
     }
     
-    private static void playSound() 
+    public static AudioManager getAudioManager()
     {
-        try
-        {
-            Player player = new Player(Main.class.getResourceAsStream("/assets/music/TheEntertainer.mp3"));
-            player.play();
-        }
-        catch(JavaLayerException e)
-        {
-            e.printStackTrace();
-        }
+        return audioManager;
     }
+    
 }

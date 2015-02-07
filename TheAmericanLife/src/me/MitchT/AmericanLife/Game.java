@@ -2,6 +2,7 @@ package me.MitchT.AmericanLife;
 
 import java.awt.Graphics;
 
+
 import javax.swing.JFrame;
 
 public class Game extends Thread
@@ -24,6 +25,7 @@ public class Game extends Thread
     @Override
     public void run()
     {
+        Main.getAudioManager().stop();
         lastLoopTime = System.nanoTime();
         
         gameRunning = true;
