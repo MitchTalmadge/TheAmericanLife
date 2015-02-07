@@ -7,12 +7,29 @@ public class AudioManager
 {
     
     private AudioThread thread;
+    private String[] playlist;
+    
+    public void setPlaylist(String[] playlist)
+    {
+        this.playlist = playlist;
+    }
+    
+    public void startPlaylist()
+    {
+        stop();
+        
+        if(playlist != null)
+        {
+            thread = new AudioThread(playlist);
+            thread.start();
+        }
+    }
     
     public void play(String audioPath)
     {
         stop();
         
-        thread = new AudioThread(audioPath);
+        thread = new AudioThread(new String[]{audioPath});
         thread.start();
     }
     

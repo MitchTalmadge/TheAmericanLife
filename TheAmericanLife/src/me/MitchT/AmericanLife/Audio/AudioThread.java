@@ -9,13 +9,13 @@ import javazoom.jl.player.Player;
 public class AudioThread extends Thread
 {
     
-    private final String audioPath;
+    private final String[] audioPaths;
     private Player player;
     private AtomicBoolean paused = new AtomicBoolean(false);
 
-    public AudioThread(String audioPath)
+    public AudioThread(String[] audioPaths)
     {
-        this.audioPath = audioPath;
+        this.audioPaths = audioPaths;
     }
     
     @Override
@@ -23,10 +23,13 @@ public class AudioThread extends Thread
     {
         try
         {
-            player = new Player(getClass().getResourceAsStream(audioPath));
-            while(player.play(1))
-                if(paused.get())
-                    LockSupport.park();
+            for(String audioPath : audioPaths)
+            {
+                player = new Player(getClass().getResourceAsStream(audioPath));
+                while(player.play(1))
+                    if(paused.get())
+                        LockSupport.park();
+            }
         }
         catch(JavaLayerException e)
         {

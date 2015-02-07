@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<level name="Transition to War - 1914">
+	<properties>
+		<playList>
+			<song>TheEntertainer.mp3</song>
+		</playList>
+	</properties>
+	<entities>
+		<entity type="Player">
+			<position>50,-400</position>
+			<spriteSheet>BusinessMan.png</spriteSheet>
+		</entity>
+		<entity type="Static">
+            <position>0,0</position>
+            <imagePath>BackgroundIcon.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>800</w>
+            <h>512</h>
+        </entity>
+	</entities>
+</level>
