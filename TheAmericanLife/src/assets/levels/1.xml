@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<level name="Transition to War - 1914">
+<level name="USA Joins WWI - April 6, 1917">
 	<properties>
+	    <player>
+	       <position>20,350</position>
+	       <renderLayer>3</renderLayer>
+	       <spriteSheet>BusinessMan.png</spriteSheet>
+	       <spriteDimensions>11,19</spriteDimensions>
+	       <desiredDimensions>22,38</desiredDimensions>
+	       
+	    </player>
 		<playList>
 			<song>MapleLeaf.mp3</song>
 		</playList>
 	</properties>
 	<entities>
-		<entity type="Player">
-			<position>50,-400</position>
-			<spriteSheet>BusinessMan.png</spriteSheet>
-		</entity>
-		<entity type="Static">
+		<entity type="Repeating">
             <position>0,0</position>
-            <imagePath>BackgroundIcon.png</imagePath>
+            <imagePath>textures/Sky.png</imagePath>
             <u>0</u>
             <v>0</v>
-            <w>800</w>
-            <h>512</h>
+            <w>100</w>
+            <h>400</h>
+            <renderLayer>0</renderLayer>
+        </entity>
+        <entity type="Repeating">
+            <position>0,0</position>
+            <imagePath>textures/Buildings.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>371</w>
+            <h>337</h>
+            <renderLayer>1</renderLayer>
+        </entity>
+        <entity type="Repeating">
+            <position>0,270</position>
+            <imagePath>textures/Road.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>100</w>
+            <h>50</h>
+            <renderLayer>2</renderLayer>
         </entity>
 	</entities>
 </level>

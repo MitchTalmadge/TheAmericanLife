@@ -8,15 +8,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.advanced.AdvancedPlayer;
 import me.MitchT.AmericanLife.Game;
 import me.MitchT.AmericanLife.Main;
 
@@ -25,6 +22,7 @@ public class MainMenu extends JFrame implements ButtonPanelListener
     
     public MainMenu()
     {
+        super("The American Life");
         Main.getAudioManager().play("/assets/music/TheEntertainer.mp3");
         
         BufferedImage menuIcons = null;
@@ -93,28 +91,26 @@ public class MainMenu extends JFrame implements ButtonPanelListener
         
         JPanelWithBackground pictureFramePanel = new JPanelWithBackground(pictureFrame);
         pictureFramePanel.setOpaque(false);
-        pictureFramePanel.setPreferredSize(new Dimension(256,327));
+        pictureFramePanel.setPreferredSize(new Dimension(256, 327));
         westPanel.add(pictureFramePanel, BorderLayout.CENTER);
         
         JSpritePanel spritePanel = new JSpritePanel(businessMan, 750, 11, 19, 2, 110, 190);
         spritePanel.setOpaque(false);
-        spritePanel.setBorder(new EmptyBorder(95,0,0,20));
+        spritePanel.setBorder(new EmptyBorder(95, 0, 0, 20));
         pictureFramePanel.add(spritePanel);
         
         this.pack();
         this.setLocationRelativeTo(null);
         this.setVisible(false);
     }
-
+    
     @Override
     public void buttonClicked(MenuButton button, int buttonId)
     {
         switch(buttonId)
         {
             case 0:
-                new Game(this).start();
-                this.setContentPane(new JPanel());
-                this.repaint();
+                new Game(this);
                 break;
             case 1:
                 System.out.println("Options");

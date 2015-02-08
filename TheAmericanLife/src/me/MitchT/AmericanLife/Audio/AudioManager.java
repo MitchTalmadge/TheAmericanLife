@@ -2,10 +2,10 @@ package me.MitchT.AmericanLife.Audio;
 
 import java.util.concurrent.locks.LockSupport;
 
-
 public class AudioManager
 {
     
+    private boolean musicEnabled = true;
     private AudioThread thread;
     private String[] playlist;
     
@@ -17,8 +17,7 @@ public class AudioManager
     public void startPlaylist()
     {
         stop();
-        
-        if(playlist != null)
+        if(playlist != null && musicEnabled)
         {
             thread = new AudioThread(playlist);
             thread.start();
@@ -29,8 +28,11 @@ public class AudioManager
     {
         stop();
         
-        thread = new AudioThread(new String[]{audioPath});
-        thread.start();
+        if(musicEnabled)
+        {
+            thread = new AudioThread(new String[] { audioPath });
+            thread.start();
+        }
     }
     
     public void setPaused(boolean paused)

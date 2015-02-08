@@ -6,12 +6,12 @@ import java.awt.image.BufferedImage;
 
 import me.MitchT.AmericanLife.Components.Component;
 
-public class StaticEntity extends Entity
+public class RepeatingEntity extends Entity
 {
     private Point position;
     private BufferedImage image;
     
-    public StaticEntity(Point position, BufferedImage image, int renderLayer)
+    public RepeatingEntity(Point position, BufferedImage image, int renderLayer)
     {
         super(renderLayer, new Component[] {});
         this.position = position;

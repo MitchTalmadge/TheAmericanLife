@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import me.MitchT.AmericanLife.LevelLoader.Elements.EntityElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.LevelElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.PlayListElement;
+import me.MitchT.AmericanLife.LevelLoader.Elements.PlayerElement;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -24,9 +25,12 @@ public class LevelManager
 {
     
     private HashMap<String[], Class<? extends LevelElement>> levelElementMap = new HashMap<String[], Class<? extends LevelElement>>();
+    private String currentLevelName = "";
+    private int currentLevelId = 0;
     
     public LevelManager()
     {
+        registerElement(PlayerElement.class, "player", "properties");
         registerElement(PlayListElement.class, "playList", "properties");
         registerElement(EntityElement.class, "entity", "entities");
     }
@@ -38,7 +42,7 @@ public class LevelManager
     
     private void registerElement(Class<? extends LevelElement> clazz, String elementName, String parentElementName)
     {
-        levelElementMap.put(new String[] {elementName, parentElementName}, clazz);
+        levelElementMap.put(new String[] { elementName, parentElementName }, clazz);
     }
     
     public void loadLevel(int levelID)
@@ -52,10 +56,8 @@ public class LevelManager
         {
             System.out.println(xmlFilePath);
             InputStream inputStream = getClass().getResourceAsStream(xmlFilePath);
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory
-                    .newInstance();
-            DocumentBuilder documentBuilder = documentBuilderFactory
-                    .newDocumentBuilder();
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document xmlDoc = documentBuilder.parse(inputStream);
             
             xmlDoc.getDocumentElement().normalize();
@@ -67,19 +69,17 @@ public class LevelManager
                 if(!levelElement.getNodeName().equals("level"))
                     throw new InvalidLevelException("Missing 'level' element.");
                 
-                String levelName;
+                String levelName = levelElement.getAttribute("name");
                 int levelID = LevelsEnum.getLevelIDByXmlPath(xmlFilePath);
                 
-                levelName = levelElement.getAttribute("name");
-                System.out.println("Loading Level: " + levelName);
+                this.currentLevelName = levelName;
+                this.currentLevelId = levelID;
+                
+                System.out.println("Loading Level: " + currentLevelName);
                 
                 //---- Level Properties ----//
                 
                 transverseElements(levelElement);
-            }
-            else
-            {
-                throw new InvalidLevelException("Level XML File does not exist at '" + xmlFilePath + "'!");
             }
         }
         catch(InvalidLevelException e)
@@ -121,7 +121,7 @@ public class LevelManager
                             {
                                 elementMap.get(entrySet.getValue()).add(element);
                             }
-                            else 
+                            else
                             {
                                 ArrayList<Element> elementList = new ArrayList<Element>();
                                 elementList.add(element);
@@ -152,6 +152,16 @@ public class LevelManager
                 e.printStackTrace();
             }
         }
+    }
+    
+    public String getCurrentLevelName()
+    {
+        return this.currentLevelName;
+    }
+    
+    public int getCurrentLevelId()
+    {
+        return this.currentLevelId;
     }
     
 }
