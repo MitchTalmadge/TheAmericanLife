@@ -23,6 +23,7 @@ import me.MitchT.AmericanLife.Entities.PlayerEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.LevelManager;
+import me.MitchT.AmericanLife.LevelLoader.LevelsEnum;
 
 public class Game extends Canvas implements GameLoopListener, KeyListener
 {
@@ -35,7 +36,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private int cameraX = 0;
     private int cameraY = 0;
     
-    private int borderHeight = 100;
+    private final int borderHeight = 100;
     private Font titleFont;
     private int titleSolidCounter = 0;
     private int titleFadeCounter = 0;
@@ -70,16 +71,34 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         this.levelManager = new LevelManager();
         this.audioManager = Main.getAudioManager();
         
-        //---- Game Loop ----//
-        this.gameLoop = new GameLoop();
-        gameLoop.registerGameLoopListener(this);
-        
         init();
     }
     
     private void init()
     {
-        Main.getAudioManager().stop();
+        loadLevel(1);
+    }
+    
+    private void loadLevel(int levelId)
+    {
+        //---- Clean Up ----//
+        this.audioManager.stop();
+        
+        if(this.gameLoop != null)
+            gameLoop.dispose();
+        gameLoop = new GameLoop();
+        gameLoop.registerGameLoopListener(this);
+        
+        this.entities.clear();
+        this.titleSolidCounter = 0;
+        this.titleFadeCounter = 0;
+        
+        this.cameraX = 0;
+        this.cameraY = 0;
+        this.speedCounter = 0;
+        this.keysDown[0] = false;
+        this.keysDown[1] = false;
+        
         try
         {
             Thread.sleep(500);
@@ -88,9 +107,9 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         {
             e.printStackTrace();
         }
-        levelManager.loadLevel(1);
-        titleSolidCounter = 0;
-        titleFadeCounter = 0;
+        
+        //---- Initialize ----//
+        this.levelManager.loadLevel(levelId);
         audioManager.startPlaylist();
         gameLoop.start();
     }
@@ -112,7 +131,6 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             if(keysDown[1])
                 if(cameraX < 1000)
                     cameraX += scrollInc;
-            System.out.println(cameraX);
         }
         else if(!keysDown[0] && !keysDown[1])
             speedCounter = scrollSpeed;

@@ -68,6 +68,9 @@ public class GameLoop extends Thread
                 }
             }
         }
+        
+        this.listenerList.clear();
+        this.listenerList = null;
     }
     
     private void update()
@@ -86,6 +89,11 @@ public class GameLoop extends Thread
     {
         if(!this.listenerList.contains(listener))
             this.listenerList.add(listener);
+    }
+    
+    public void dispose()
+    {
+        this.gameRunning = false;
     }
     
 }
