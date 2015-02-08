@@ -1,6 +1,10 @@
 package me.MitchT.AmericanLife;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -10,6 +14,7 @@ import javax.swing.JFrame;
 
 import me.MitchT.AmericanLife.Audio.AudioManager;
 import me.MitchT.AmericanLife.Entities.Entity;
+import me.MitchT.AmericanLife.Entities.PlayerEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.LevelManager;
 
@@ -31,6 +36,8 @@ public class Game extends Thread
 
     private LevelManager levelManager;
     private AudioManager audioManager;
+
+	private PlayerEntity player;
     
     public Game(JFrame gameFrame)
     {
@@ -41,10 +48,9 @@ public class Game extends Thread
         this.audioManager = Main.getAudioManager();
     }
     
-    @Override
-    public void run()
+    private void init()
     {
-        Main.getAudioManager().stop();
+    	Main.getAudioManager().stop();
         try
         {
             Thread.sleep(500);
@@ -55,6 +61,16 @@ public class Game extends Thread
         }
         levelManager.loadLevel(1);
         audioManager.startPlaylist();
+        
+        //---- Create Player ----//
+        this.player = new PlayerEntity(new Point(0,-400), null);
+    }
+    
+    @Override
+    public void run()
+    {
+    	init();
+        
         lastLoopTime = System.nanoTime();
         
         gameRunning = true;
@@ -81,7 +97,9 @@ public class Game extends Thread
             
             try
             {
-                Thread.sleep((lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000);
+            	long sleepTime = (lastLoopTime - System.nanoTime() + OPTIMAL_TIME) / 1000000;
+            	if(sleepTime > 0)
+            		Thread.sleep(sleepTime);
             }
             catch(InterruptedException expected)
             {
@@ -96,8 +114,17 @@ public class Game extends Thread
     }
     
     private void render(double lastTimePerFrame, Graphics g)
-    {
-        Set<Integer> keySet = entities.keySet();
+    {    	
+    	BufferStrategy strategy = this.gameFrame.getBufferStrategy();
+    	if(strategy == null)
+    	{
+    		this.gameFrame.createBufferStrategy(2);
+    		strategy = this.gameFrame.getBufferStrategy();
+    	}
+    	
+    	Graphics2D gfx = (Graphics2D) strategy.getDrawGraphics();
+    	
+    	Set<Integer> keySet = entities.keySet();
         for(Integer i : keySet)
         {
             ArrayList<Entity> entityArray = entities.get(i);
@@ -106,10 +133,12 @@ public class Game extends Thread
                 if(entity instanceof StaticEntity)
                 {
                     StaticEntity staticEntity = (StaticEntity) entity;
-                    g.drawImage(staticEntity.getImage(), staticEntity.getX(), staticEntity.getY(), null);
+                    gfx.drawImage(staticEntity.getImage(), staticEntity.getX(), staticEntity.getY(), null);
                 }
             }
         }
+        gfx.dispose();
+        strategy.show();
     }
     
     public void addEntity(Entity entity)
