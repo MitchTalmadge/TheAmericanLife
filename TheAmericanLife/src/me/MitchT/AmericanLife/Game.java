@@ -287,6 +287,10 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         {
             keysDown[1] = false;
         }
+        else if(event.getKeyCode() == KeyEvent.VK_ESCAPE)
+        {
+        	System.exit(0);
+        }
     }
     
     @Override
