@@ -14,6 +14,7 @@ import me.MitchT.AmericanLife.LevelLoader.Elements.EntityElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.LevelElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.PlayListElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.PlayerElement;
+import me.MitchT.AmericanLife.LevelLoader.Elements.StageElement;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,6 +31,7 @@ public class LevelManager
     
     public LevelManager()
     {
+        registerElement(StageElement.class, "stage", "properties");
         registerElement(PlayerElement.class, "player", "properties");
         registerElement(PlayListElement.class, "playList", "properties");
         registerElement(EntityElement.class, "entity", "entities");
@@ -54,7 +56,6 @@ public class LevelManager
     {
         try
         {
-            System.out.println(xmlFilePath);
             InputStream inputStream = getClass().getResourceAsStream(xmlFilePath);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -75,7 +76,7 @@ public class LevelManager
                 this.currentLevelName = levelName;
                 this.currentLevelId = levelID;
                 
-                System.out.println("Loading Level: " + currentLevelName);
+                System.out.println("Loading Level "+levelID+": " + currentLevelName);
                 
                 //---- Level Properties ----//
                 

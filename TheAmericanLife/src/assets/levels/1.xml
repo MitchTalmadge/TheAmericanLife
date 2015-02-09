@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level name="USA Joins WWI - April 6, 1917">
 	<properties>
+	    <stage>
+	       <width>600</width>
+	    </stage>
 	    <player>
 	       <position>20,350</position>
 	       <renderLayer>3</renderLayer>
 	       <spriteSheet>BusinessMan.png</spriteSheet>
 	       <spriteDimensions>11,19</spriteDimensions>
 	       <desiredDimensions>22,38</desiredDimensions>
-	       
 	    </player>
 		<playList>
 			<song>MapleLeaf.mp3</song>

@@ -4,12 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GradientPaint;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeMap;
@@ -23,7 +23,6 @@ import me.MitchT.AmericanLife.Entities.PlayerEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.LevelManager;
-import me.MitchT.AmericanLife.LevelLoader.LevelsEnum;
 
 public class Game extends Canvas implements GameLoopListener, KeyListener
 {
@@ -34,9 +33,15 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private final int scrollInc = 2;
     private int speedCounter = 0;
     private int cameraX = 0;
-    private int cameraY = 0;
+    
+    private boolean playerEntered = false;
+    private final int enterSpeed = 1;
+    private final int enterInc = 2;
+    private int enterCounter = 0;
     
     private final int borderHeight = 100;
+    private final int fadeWidth = 200;
+    private final int fadeDarkWidth = 50;
     private Font titleFont;
     private int titleSolidCounter = 0;
     private int titleFadeCounter = 0;
@@ -49,6 +54,8 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private AudioManager audioManager;
     
     private GameLoop gameLoop;
+
+    private int stageWidth = getWidth();
     
     public Game(JFrame gameFrame)
     {
@@ -94,10 +101,14 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         this.titleFadeCounter = 0;
         
         this.cameraX = 0;
-        this.cameraY = 0;
         this.speedCounter = 0;
         this.keysDown[0] = false;
         this.keysDown[1] = false;
+        
+        this.playerEntered = false;
+        this.enterCounter = 0;
+        
+        this.stageWidth = getWidth();
         
         try
         {
@@ -129,7 +140,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                 if(cameraX > 0)
                     cameraX -= scrollInc;
             if(keysDown[1])
-                if(cameraX < 1000)
+                if(cameraX < stageWidth)
                     cameraX += scrollInc;
         }
         else if(!keysDown[0] && !keysDown[1])
@@ -182,6 +193,29 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     for(int j = 0; j < repeatCount; j++)
                         gfx.drawImage(repeatingEntity.getImage(), repeatingEntity.getX() + (j * repeatingEntity.getWidth()) - (cameraX % repeatingEntity.getWidth()), repeatingEntity.getY() + borderHeight, null);
                 }
+            }
+        }
+        
+        //---- Draw Edge Black Fade ----//
+        gfx.setColor(Color.BLACK);
+        if(cameraX < fadeWidth) //Left Edge
+        {
+            int alpha = (int)(((float)(fadeWidth-cameraX)/((float)fadeWidth - fadeDarkWidth))*255);
+            GradientPaint gradientPaint = new GradientPaint((fadeDarkWidth-cameraX >= 0) ? (fadeDarkWidth-cameraX) : 0, 0, new Color(0, 0, 0, (fadeDarkWidth-cameraX >= 0) ? 255 : alpha), fadeWidth-cameraX, 0, new Color(0,0,0,0));
+            gfx.setPaint(gradientPaint);
+            for(int j = 0; j < fadeWidth - cameraX; j++)
+            {
+                gfx.fillRect(j, 0, 1, this.getHeight());
+            }
+        }
+        else if(cameraX > this.stageWidth - fadeWidth) //Right Edge
+        {
+            int alpha = (int)((float)(fadeWidth - (stageWidth - cameraX))/((float)fadeWidth - fadeDarkWidth)*255);
+            GradientPaint gradientPaint = new GradientPaint((stageWidth - cameraX <= fadeDarkWidth) ? (getWidth() - (fadeDarkWidth - (stageWidth - cameraX))) : getWidth(), 0, new Color(0, 0, 0, (stageWidth - cameraX <= fadeDarkWidth) ? 255 : alpha), (getWidth() - fadeWidth) + (stageWidth - cameraX), 0, new Color(0,0,0,0));
+            gfx.setPaint(gradientPaint);
+            for(int j = 0; j < fadeWidth - (stageWidth - cameraX); j++)
+            {
+                gfx.fillRect(getWidth()-j, 0, 1, this.getHeight());
             }
         }
         
@@ -268,5 +302,10 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     public boolean[] getKeysDown()
     {
         return keysDown;
+    }
+
+    public void setStageWidth(int stageWidth)
+    {
+        this.stageWidth = stageWidth;
     }
 }
