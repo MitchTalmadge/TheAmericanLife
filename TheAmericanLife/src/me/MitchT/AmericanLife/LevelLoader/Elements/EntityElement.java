@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import me.MitchT.AmericanLife.Entities.PositionedEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.InvalidLevelException;
@@ -64,6 +65,30 @@ public class EntityElement extends LevelElement
                         image = ImageIO.read(getClass().getResource(imagePath));
                         image = image.getSubimage(u, v, w, h);
                         game.addEntity(new RepeatingEntity(position, image, renderLayer));
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else if(element.getAttribute("type").equals("Positioned"))
+            {
+                if(XMLHelper.doesElementContainChildren(element, "position", "imagePath", "u", "v", "w", "h", "renderLayer"))
+                {
+                    Point position = XMLHelper.getChildAsPoint(element, "position");
+                    String imagePath = "/assets/images/" + XMLHelper.getChildAsString(element, "imagePath");
+                    int u = XMLHelper.getChildAsInteger(element, "u");
+                    int v = XMLHelper.getChildAsInteger(element, "v");
+                    int w = XMLHelper.getChildAsInteger(element, "w");
+                    int h = XMLHelper.getChildAsInteger(element, "h");
+                    int renderLayer = XMLHelper.getChildAsInteger(element, "renderLayer");
+                    BufferedImage image = null;
+                    try
+                    {
+                        image = ImageIO.read(getClass().getResource(imagePath));
+                        image = image.getSubimage(u, v, w, h);
+                        game.addEntity(new PositionedEntity(position, image, renderLayer));
                     }
                     catch(IOException e)
                     {

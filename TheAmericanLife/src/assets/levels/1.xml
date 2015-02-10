@@ -2,7 +2,7 @@
 <level name="USA Joins WWI - April 6, 1917">
 	<properties>
 	    <stage>
-	       <width>600</width>
+	       <width>1000</width>
 	    </stage>
 	    <player>
 	       <position>20,350</position>
@@ -36,6 +36,15 @@
         </entity>
         <entity type="Repeating">
             <position>0,270</position>
+            <imagePath>textures/Road.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>100</w>
+            <h>50</h>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Positioned">
+            <position>500,200</position>
             <imagePath>textures/Road.png</imagePath>
             <u>0</u>
             <v>0</v>

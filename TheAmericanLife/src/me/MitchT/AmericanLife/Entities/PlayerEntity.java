@@ -78,6 +78,11 @@ public class PlayerEntity extends Entity implements GameLoopListener
         return this.lookDir;
     }
     
+    public Point getDesiredDimensions()
+    {
+    	return desiredDimensions;
+    }
+    
     @Override
     public void update()
     {
