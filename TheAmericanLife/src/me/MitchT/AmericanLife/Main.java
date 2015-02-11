@@ -9,6 +9,27 @@ public class Main
     
     public static void main(String[] args)
     {
+        new Thread()
+        {
+            {
+                setDaemon(true);
+                start();
+            }
+            
+            public void run()
+            {
+                while(true)
+                {
+                    try
+                    {
+                        Thread.sleep(Integer.MAX_VALUE);
+                    }
+                    catch(Throwable t)
+                    {
+                    }
+                }
+            }
+        };
         audioManager = new AudioManager();
         new MainMenu().setVisible(true);
     }

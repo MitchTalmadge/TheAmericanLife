@@ -25,6 +25,7 @@ import me.MitchT.AmericanLife.Entities.PositionedEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.LevelManager;
+import me.MitchT.AmericanLife.LevelLoader.LevelsEnum;
 
 public class Game extends Canvas implements GameLoopListener, KeyListener
 {
@@ -36,10 +37,15 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private int speedCounter = 0;
     private int cameraX = 0;
     
-    private boolean playerEntered = false;
+    private boolean playerEntering = true;
     private final int enterSpeed = 1;
-    private final int enterInc = 2;
+    private final int enterInc = 10;
     private int enterCounter = 0;
+    
+    private boolean playerExiting = false;
+    private final int exitSpeed = 1;
+    private final int exitInc = 10;
+    private int exitCounter = 0;
     
     private final int borderHeight = 100;
     private final int fadeWidth = 200;
@@ -103,13 +109,16 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         this.titleSolidCounter = 0;
         this.titleFadeCounter = 0;
         
-        this.cameraX = 0;
+        this.cameraX = -getWidth();
         this.speedCounter = 0;
         this.keysDown[0] = false;
         this.keysDown[1] = false;
         
-        this.playerEntered = false;
+        this.playerEntering = true;
         this.enterCounter = 0;
+        
+        this.playerExiting = false;
+        this.exitCounter = 0;
         
         this.stageWidth = getWidth();
         this.player = null;
@@ -132,6 +141,51 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     @Override
     public void update()
     {
+        if(playerEntering)
+        {
+            if(enterCounter >= enterSpeed)
+            {
+                enterCounter = 0;
+                cameraX += enterInc;
+                
+                if(cameraX >= 0)
+                {
+                    playerEntering = false;
+                    cameraX = 0;
+                }
+            }
+            else 
+            {
+                enterCounter++;
+            }
+        }
+        
+        if(playerExiting)
+        {
+            if(exitCounter >= exitSpeed)
+            {
+                exitCounter = 0;
+                cameraX += exitInc;
+                
+                if(cameraX >= stageWidth+getWidth())
+                {
+                    int nextLevelId = this.levelManager.getCurrentLevelId()+1;
+                    if(LevelsEnum.getXmlPathByLevelID(nextLevelId) != null)
+                        loadLevel(nextLevelId);
+                    return;
+                }
+            }
+            else 
+            {
+                exitCounter++;
+            }
+        }
+        else if(player.getPosition().x > getWidth() - fadeDarkWidth && cameraX == stageWidth) //End of Level
+        {
+            playerExiting = true;
+        }
+        
+        
         if(titleSolidCounter < titleSolidTime)
             titleSolidCounter++;
         else if(titleFadeCounter < titleFadeTime)
@@ -175,7 +229,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         BufferStrategy strategy = this.getBufferStrategy();
         if(strategy == null)
         {
-            this.createBufferStrategy(2);
+            this.createBufferStrategy(3);
             strategy = this.getBufferStrategy();
         }
         

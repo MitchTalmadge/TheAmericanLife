@@ -94,7 +94,7 @@ public class MainMenu extends JFrame implements ButtonPanelListener
         pictureFramePanel.setPreferredSize(new Dimension(256, 327));
         westPanel.add(pictureFramePanel, BorderLayout.CENTER);
         
-        JSpritePanel spritePanel = new JSpritePanel(businessMan, 750, 11, 19, 2, 110, 190);
+        JSpritePanel spritePanel = new JSpritePanel(businessMan, 63, 800, 11, 19, 2, 110, 190);
         spritePanel.setOpaque(false);
         spritePanel.setBorder(new EmptyBorder(95, 0, 0, 20));
         pictureFramePanel.add(spritePanel);

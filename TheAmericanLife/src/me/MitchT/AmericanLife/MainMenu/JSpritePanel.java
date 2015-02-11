@@ -15,14 +15,13 @@ public class JSpritePanel extends JPanel implements ActionListener
     private ImageIcon[] frames;
     private Timer timer;
     private JLabel spriteLabel;
+    private boolean hasStarted = false;
+    private int frameDelay;
     
-    public JSpritePanel(BufferedImage spriteSheet, int frameDelay, int spriteWidth, int spriteHeight, int frameCount, int desiredWidth, int desiredHeight)
+    public JSpritePanel(BufferedImage spriteSheet, int startDelay, int frameDelay, int spriteWidth, int spriteHeight, int frameCount, int desiredWidth, int desiredHeight)
     {
         this.frames = new ImageIcon[frameCount];
-        
-        this.timer = new Timer(frameDelay, this);
-        timer.setRepeats(true);
-        timer.start();
+        this.frameDelay = frameDelay;
         
         for(int i = 0; i < frameCount; i++)
         {
@@ -32,14 +31,28 @@ public class JSpritePanel extends JPanel implements ActionListener
         
         spriteLabel = new JLabel(this.frames[currentFrame]);
         this.add(spriteLabel);
+        
+        this.timer = new Timer(startDelay, this);
+        timer.setRepeats(false);
+        timer.start();
     }
     
     @Override
     public void actionPerformed(ActionEvent arg0)
     {
+        if(hasStarted)
+        {
         currentFrame++;
         if(currentFrame+1 > this.frames.length)
             currentFrame = 0;
         spriteLabel.setIcon(this.frames[currentFrame]);
+        }
+        else 
+        {
+            hasStarted = true;
+            timer = new Timer(frameDelay, this);
+            timer.setRepeats(true);
+            timer.start();
+        }
     }
 }
