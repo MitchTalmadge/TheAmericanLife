@@ -38,14 +38,10 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private int cameraX = 0;
     
     private boolean playerEntering = true;
-    private final int enterSpeed = 1;
-    private final int enterInc = 10;
-    private int enterCounter = 0;
-    
     private boolean playerExiting = false;
-    private final int exitSpeed = 1;
-    private final int exitInc = 10;
-    private int exitCounter = 0;
+    private final int transitionSpeed = 1;
+    private final int transitionInc = 10;
+    private int transitionCounter = 0;
     
     private final int borderHeight = 100;
     private final int fadeWidth = 200;
@@ -115,10 +111,8 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         this.keysDown[1] = false;
         
         this.playerEntering = true;
-        this.enterCounter = 0;
-        
         this.playerExiting = false;
-        this.exitCounter = 0;
+        this.transitionCounter = 0;
         
         this.stageWidth = getWidth();
         this.player = null;
@@ -143,10 +137,11 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     {
         if(playerEntering)
         {
-            if(enterCounter >= enterSpeed)
+            clearKeysDown();
+            if(transitionCounter >= transitionSpeed)
             {
-                enterCounter = 0;
-                cameraX += enterInc;
+                transitionCounter = 0;
+                cameraX += transitionInc;
                 
                 if(cameraX >= 0)
                 {
@@ -156,16 +151,16 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             }
             else 
             {
-                enterCounter++;
+                transitionCounter++;
             }
         }
-        
-        if(playerExiting)
+        else if(playerExiting)
         {
-            if(exitCounter >= exitSpeed)
+            clearKeysDown();
+            if(transitionCounter >= transitionSpeed)
             {
-                exitCounter = 0;
-                cameraX += exitInc;
+                transitionCounter = 0;
+                cameraX += transitionInc;
                 
                 if(cameraX >= stageWidth+getWidth())
                 {
@@ -177,7 +172,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             }
             else 
             {
-                exitCounter++;
+                transitionCounter++;
             }
         }
         else if(player.getPosition().x > getWidth() - fadeDarkWidth && cameraX == stageWidth) //End of Level
@@ -386,6 +381,14 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     public boolean[] getKeysDown()
     {
         return keysDown;
+    }
+    
+    private void clearKeysDown()
+    {
+        for(int i = 0; i < keysDown.length; i++)
+        {
+            keysDown[i] = false;
+        }
     }
 
     public void setStageWidth(int stageWidth)
