@@ -15,6 +15,7 @@ import me.MitchT.AmericanLife.LevelLoader.Elements.LevelElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.PlayListElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.PlayerElement;
 import me.MitchT.AmericanLife.LevelLoader.Elements.StageElement;
+import me.MitchT.AmericanLife.LevelLoader.Elements.YearElement;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -35,6 +36,7 @@ public class LevelManager
         registerElement(PlayerElement.class, "player", "properties");
         registerElement(PlayListElement.class, "playList", "properties");
         registerElement(EntityElement.class, "entity", "entities");
+        registerElement(YearElement.class, "year", "years");
     }
     
     private void registerElement(Class<? extends LevelElement> clazz, String elementName)

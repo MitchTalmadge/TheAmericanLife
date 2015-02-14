@@ -15,6 +15,8 @@ public class AudioThread extends Thread
 
     public AudioThread(String[] audioPaths)
     {
+        super("AudioThread");
+        this.setDaemon(true);
         this.audioPaths = audioPaths;
     }
     
@@ -23,6 +25,7 @@ public class AudioThread extends Thread
     {
         try
         {
+            Thread.sleep(100);
             for(String audioPath : audioPaths)
             {
                 player = new Player(getClass().getResourceAsStream(audioPath));
@@ -34,6 +37,9 @@ public class AudioThread extends Thread
         catch(JavaLayerException e)
         {
             e.printStackTrace();
+        }
+        catch(InterruptedException e)
+        {
         }
     }
     

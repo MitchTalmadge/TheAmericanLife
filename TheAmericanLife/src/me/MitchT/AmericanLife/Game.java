@@ -5,13 +5,16 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GradientPaint;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
-import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -47,20 +50,25 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private final int fadeWidth = 200;
     private final int fadeDarkWidth = 50;
     private Font titleFont;
+    private Font yearFont;
     private int titleSolidCounter = 0;
     private int titleFadeCounter = 0;
     private final int titleSolidTime = 100;
     private final int titleFadeTime = 100;
     
-    private TreeMap<Integer, ArrayList<Entity>> entities = new TreeMap<Integer, ArrayList<Entity>>();
+    private TreeMap<Integer, ArrayList<Entity>> entitiesMap = new TreeMap<Integer, ArrayList<Entity>>();
+    private HashMap<Integer, String> yearsMap = new HashMap<Integer, String>();
     
     private LevelManager levelManager;
     private AudioManager audioManager;
     
     private GameLoop gameLoop;
-
+    
     private int stageWidth = getWidth();
     private PlayerEntity player;
+    
+    private BufferedImage drawBuffer;
+    private Graphics2D drawGraphics;
     
     public Game(JFrame gameFrame)
     {
@@ -77,7 +85,11 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         gameFrame.setVisible(true);
         this.setVisible(true);
         
+        drawBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+        drawGraphics = (Graphics2D) drawBuffer.getGraphics();
+        
         this.titleFont = getFont().deriveFont(30f);
+        this.yearFont = getFont().deriveFont(30f);
         
         //---- Managers ----//
         this.levelManager = new LevelManager();
@@ -101,7 +113,9 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         gameLoop = new GameLoop();
         gameLoop.registerGameLoopListener(this);
         
-        this.entities.clear();
+        this.entitiesMap.clear();
+        this.yearsMap.clear();
+        
         this.titleSolidCounter = 0;
         this.titleFadeCounter = 0;
         
@@ -149,7 +163,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     cameraX = 0;
                 }
             }
-            else 
+            else
             {
                 transitionCounter++;
             }
@@ -162,15 +176,15 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                 transitionCounter = 0;
                 cameraX += transitionInc;
                 
-                if(cameraX >= stageWidth+getWidth())
+                if(cameraX >= stageWidth + getWidth())
                 {
-                    int nextLevelId = this.levelManager.getCurrentLevelId()+1;
+                    int nextLevelId = this.levelManager.getCurrentLevelId() + 1;
                     if(LevelsEnum.getXmlPathByLevelID(nextLevelId) != null)
                         loadLevel(nextLevelId);
                     return;
                 }
             }
-            else 
+            else
             {
                 transitionCounter++;
             }
@@ -179,7 +193,6 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         {
             playerExiting = true;
         }
-        
         
         if(titleSolidCounter < titleSolidTime)
             titleSolidCounter++;
@@ -191,24 +204,24 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             speedCounter = 0;
             if(keysDown[0]) //Left
             {
-            	if((cameraX == stageWidth && player.getPosition().x > (getWidth()/2 - (float)player.getDesiredDimensions().x/2)) || (cameraX == 0 && player.getPosition().x > 0))
-            	{
-            		player.setPosition(new Point(player.getPosition().x - scrollInc, player.getPosition().y));
-            	}
-            	else if(cameraX == 0 && player.getPosition().x > 0)
-            	{
-            		player.setPosition(new Point(player.getPosition().x - scrollInc, player.getPosition().y));
-            	}
-            	else if(cameraX > 0)
+                if((cameraX == stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == 0 && player.getPosition().x > 0))
+                {
+                    player.setPosition(new Point(player.getPosition().x - scrollInc, player.getPosition().y));
+                }
+                else if(cameraX == 0 && player.getPosition().x > 0)
+                {
+                    player.setPosition(new Point(player.getPosition().x - scrollInc, player.getPosition().y));
+                }
+                else if(cameraX > 0)
                     cameraX -= scrollInc;
             }
             if(keysDown[1]) //Right
             {
-            	if((cameraX == 0 && player.getPosition().x < (getWidth()/2 - (float)player.getDesiredDimensions().x/2)) || (cameraX == stageWidth && player.getPosition().x < getWidth()))
-            	{
-            		player.setPosition(new Point(player.getPosition().x + scrollInc, player.getPosition().y));
-            	}
-            	else if(cameraX < stageWidth)
+                if((cameraX == 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == stageWidth && player.getPosition().x < getWidth()))
+                {
+                    player.setPosition(new Point(player.getPosition().x + scrollInc, player.getPosition().y));
+                }
+                else if(cameraX < stageWidth)
                     cameraX += scrollInc;
             }
         }
@@ -219,39 +232,36 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     }
     
     @Override
-    public void render()
+    public void update(Graphics g)
     {
-        BufferStrategy strategy = this.getBufferStrategy();
-        if(strategy == null)
-        {
-            this.createBufferStrategy(3);
-            strategy = this.getBufferStrategy();
-        }
-        
-        Graphics2D gfx = (Graphics2D) strategy.getDrawGraphics();
-        
-        Set<Integer> keySet = entities.keySet();
+        paint(g);
+    }
+    
+    @Override
+    public void paint(Graphics g)
+    {
+        Set<Integer> keySet = entitiesMap.keySet();
         for(Integer i : keySet)
         {
-            ArrayList<Entity> entityArray = entities.get(i);
+            ArrayList<Entity> entityArray = entitiesMap.get(i);
             for(Entity entity : entityArray)
             {
                 if(entity instanceof PlayerEntity)
                 {
                     PlayerEntity playerEntity = (PlayerEntity) entity;
-
-                    AffineTransform oldTransform = gfx.getTransform();
+                    
+                    AffineTransform oldTransform = drawGraphics.getTransform();
                     if(playerEntity.getTransforms() != null)
-                        gfx.transform(playerEntity.getTransforms());
+                        drawGraphics.transform(playerEntity.getTransforms());
                     
-                    gfx.drawImage(playerEntity.getAnimationFrameImage(), playerEntity.getPosition().x, playerEntity.getPosition().y, null);
+                    drawGraphics.drawImage(playerEntity.getAnimationFrameImage(), playerEntity.getPosition().x, playerEntity.getPosition().y, null);
                     
-                    gfx.setTransform(oldTransform);
+                    drawGraphics.setTransform(oldTransform);
                 }
                 else if(entity instanceof StaticEntity)
                 {
                     StaticEntity staticEntity = (StaticEntity) entity;
-                    gfx.drawImage(staticEntity.getImage(), staticEntity.getX(), staticEntity.getY() + borderHeight, null);
+                    drawGraphics.drawImage(staticEntity.getImage(), staticEntity.getX(), staticEntity.getY() + borderHeight, null);
                 }
                 else if(entity instanceof RepeatingEntity)
                 {
@@ -260,71 +270,93 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     if(cameraX % repeatingEntity.getWidth() > 0)
                         repeatCount++;
                     for(int j = 0; j < repeatCount; j++)
-                        gfx.drawImage(repeatingEntity.getImage(), repeatingEntity.getX() + (j * repeatingEntity.getWidth()) - (cameraX % repeatingEntity.getWidth()), repeatingEntity.getY() + borderHeight, null);
+                        drawGraphics.drawImage(repeatingEntity.getImage(), repeatingEntity.getX() + (j * repeatingEntity.getWidth()) - (cameraX % repeatingEntity.getWidth()), repeatingEntity.getY() + borderHeight, null);
                 }
                 else if(entity instanceof PositionedEntity)
                 {
-                	PositionedEntity positionedEntity = (PositionedEntity) entity;
-                	if(cameraX + getWidth() > positionedEntity.getX() && cameraX < positionedEntity.getX()+positionedEntity.getWidth())
-                	{
-                		gfx.drawImage(positionedEntity.getImage(), positionedEntity.getX() - cameraX, positionedEntity.getY(), null);
-                	}
+                    PositionedEntity positionedEntity = (PositionedEntity) entity;
+                    if(cameraX + getWidth() > positionedEntity.getX() && cameraX < positionedEntity.getX() + positionedEntity.getWidth())
+                    {
+                        drawGraphics.drawImage(positionedEntity.getImage(), positionedEntity.getX() - cameraX, positionedEntity.getY(), null);
+                    }
                 }
             }
         }
         
         //---- Draw Edge Black Fade ----//
-        gfx.setColor(Color.BLACK);
+        drawGraphics.setColor(Color.BLACK);
         if(cameraX < fadeWidth) //Left Edge
         {
-            int alpha = (int)(((float)(fadeWidth-cameraX)/((float)fadeWidth - fadeDarkWidth))*255);
-            GradientPaint gradientPaint = new GradientPaint((fadeDarkWidth-cameraX >= 0) ? (fadeDarkWidth-cameraX) : 0, 0, new Color(0, 0, 0, (fadeDarkWidth-cameraX >= 0) ? 255 : alpha), fadeWidth-cameraX, 0, new Color(0,0,0,0));
-            gfx.setPaint(gradientPaint);
-            gfx.fillRect(0, 0, fadeWidth - cameraX, this.getHeight());
+            int alpha = (int) (((float) (fadeWidth - cameraX) / ((float) fadeWidth - fadeDarkWidth)) * 255);
+            GradientPaint gradientPaint = new GradientPaint((fadeDarkWidth - cameraX >= 0) ? (fadeDarkWidth - cameraX) : 0, 0, new Color(0, 0, 0, (fadeDarkWidth - cameraX >= 0) ? 255 : alpha), fadeWidth - cameraX, 0, new Color(0, 0, 0, 0));
+            drawGraphics.setPaint(gradientPaint);
+            drawGraphics.fillRect(0, 0, fadeWidth - cameraX, this.getHeight());
         }
         else if(cameraX > this.stageWidth - fadeWidth) //Right Edge
         {
-            int alpha = (int)((float)(fadeWidth - (stageWidth - cameraX))/((float)fadeWidth - fadeDarkWidth)*255);
-            GradientPaint gradientPaint = new GradientPaint((stageWidth - cameraX <= fadeDarkWidth) ? (getWidth() - (fadeDarkWidth - (stageWidth - cameraX))) : getWidth(), 0, new Color(0, 0, 0, (stageWidth - cameraX <= fadeDarkWidth) ? 255 : alpha), (getWidth() - fadeWidth) + (stageWidth - cameraX), 0, new Color(0,0,0,0));
-            gfx.setPaint(gradientPaint);
-            gfx.fillRect(getWidth() - (fadeWidth - (stageWidth - cameraX)), 0, (fadeWidth - (stageWidth - cameraX)), this.getHeight());
+            int alpha = (int) ((float) (fadeWidth - (stageWidth - cameraX)) / ((float) fadeWidth - fadeDarkWidth) * 255);
+            GradientPaint gradientPaint = new GradientPaint((stageWidth - cameraX <= fadeDarkWidth) ? (getWidth() - (fadeDarkWidth - (stageWidth - cameraX))) : getWidth(), 0, new Color(0, 0, 0, (stageWidth - cameraX <= fadeDarkWidth) ? 255 : alpha), (getWidth() - fadeWidth) + (stageWidth - cameraX), 0, new Color(0, 0, 0, 0));
+            drawGraphics.setPaint(gradientPaint);
+            drawGraphics.fillRect(getWidth() - (fadeWidth - (stageWidth - cameraX)), 0, (fadeWidth - (stageWidth - cameraX)), this.getHeight());
         }
         
         //---- Draw Top/Bottom Borders ----//
-        gfx.setColor(Color.BLACK);
-        gfx.fillRect(0, 0, this.getWidth(), borderHeight);
-        gfx.fillRect(0, this.getHeight() - borderHeight, this.getWidth(), borderHeight);
+        drawGraphics.setColor(Color.BLACK);
+        drawGraphics.fillRect(0, 0, this.getWidth(), borderHeight);
+        drawGraphics.fillRect(0, this.getHeight() - borderHeight, this.getWidth(), borderHeight);
         
         //---- Draw Title Text ----//
         if(titleSolidCounter < titleSolidTime)
         {
-            gfx.setColor(new Color(255, 255, 255, 255));
-            gfx.setFont(titleFont);
-            int strWidth = gfx.getFontMetrics(titleFont).stringWidth(levelManager.getCurrentLevelName());
-            gfx.drawString(levelManager.getCurrentLevelName(), this.getWidth() / 2 - strWidth / 2, borderHeight - 10);
+            drawGraphics.setColor(new Color(255, 255, 255, 255));
+            drawGraphics.setFont(titleFont);
+            int strWidth = drawGraphics.getFontMetrics(titleFont).stringWidth(levelManager.getCurrentLevelName());
+            drawGraphics.drawString(levelManager.getCurrentLevelName(), this.getWidth() / 2 - strWidth / 2, borderHeight - 10);
         }
         else if(titleFadeCounter < titleFadeTime)
         {
-            gfx.setColor(new Color(255, 255, 255, (int) ((1f - (float) titleFadeCounter / titleFadeTime) * 255f)));
-            gfx.setFont(titleFont);
-            int strWidth = gfx.getFontMetrics(titleFont).stringWidth(levelManager.getCurrentLevelName());
-            gfx.drawString(levelManager.getCurrentLevelName(), this.getWidth() / 2 - strWidth / 2, borderHeight - 10);
+            drawGraphics.setColor(new Color(255, 255, 255, (int) ((1f - (float) titleFadeCounter / titleFadeTime) * 255f)));
+            drawGraphics.setFont(titleFont);
+            int strWidth = drawGraphics.getFontMetrics(titleFont).stringWidth(levelManager.getCurrentLevelName());
+            drawGraphics.drawString(levelManager.getCurrentLevelName(), this.getWidth() / 2 - strWidth / 2, borderHeight - 10);
         }
         
-        gfx.dispose();
-        strategy.show();
+        //---- Draw Years ----//
+        for(Entry<Integer, String> entry : yearsMap.entrySet())
+        {
+            int stageX = entry.getKey();
+            String text = entry.getValue();
+            
+            int edgeOfYear = stageX + drawGraphics.getFontMetrics(yearFont).stringWidth(text) + 6;
+            
+            if(edgeOfYear >= cameraX && stageX <= cameraX + getWidth())
+            {
+                drawGraphics.setColor(Color.WHITE);
+                drawGraphics.setFont(yearFont);
+                drawGraphics.fillRect(stageX - cameraX, this.getHeight() - borderHeight, 4, 30);
+                drawGraphics.drawString(text, stageX - cameraX + 6, this.getHeight() - borderHeight + 30);
+            }
+        }
+        
+        g.drawImage(drawBuffer, 0, 0, null);
+    }
+    
+    @Override
+    public void render()
+    {
+        repaint();
     }
     
     public void addEntity(Entity entity)
     {
-    	if(entity instanceof PlayerEntity)
-    	{
-    		this.player = (PlayerEntity) entity;
-    	}
-        int renderLayer = entity.getRenderLayer();
-        if(entities.containsKey(renderLayer))
+        if(entity instanceof PlayerEntity)
         {
-            for(Entity entityInMap : entities.get(renderLayer))
+            this.player = (PlayerEntity) entity;
+        }
+        int renderLayer = entity.getRenderLayer();
+        if(entitiesMap.containsKey(renderLayer))
+        {
+            for(Entity entityInMap : entitiesMap.get(renderLayer))
             {
                 if(entityInMap.equals(entity))
                     return;
@@ -332,9 +364,9 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         }
         else
         {
-            entities.put(renderLayer, new ArrayList<Entity>());
+            entitiesMap.put(renderLayer, new ArrayList<Entity>());
         }
-        entities.get(renderLayer).add(entity);
+        entitiesMap.get(renderLayer).add(entity);
         System.out.println("Added entity of type " + entity.getClass().getSimpleName() + " to RenderLayer " + renderLayer);
     }
     
@@ -364,7 +396,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         }
         else if(event.getKeyCode() == KeyEvent.VK_ESCAPE)
         {
-        	System.exit(0);
+            System.exit(0);
         }
     }
     
@@ -390,9 +422,14 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             keysDown[i] = false;
         }
     }
-
+    
     public void setStageWidth(int stageWidth)
     {
         this.stageWidth = stageWidth;
+    }
+    
+    public void addYear(int stageX, String text)
+    {
+        this.yearsMap.put(stageX, text);
     }
 }

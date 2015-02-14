@@ -36,7 +36,6 @@ public class GameLoop extends Thread
                 
                 if(lastFpsTime >= 1)
                 {
-                    System.out.println("FPS: "+fps);
                     fps = 0;
                     lastFpsTime = 0;
                 }
