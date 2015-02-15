@@ -64,7 +64,14 @@ public class EntityElement extends LevelElement
                     {
                         image = ImageIO.read(getClass().getResource(imagePath));
                         image = image.getSubimage(u, v, w, h);
-                        game.addEntity(new RepeatingEntity(position, image, renderLayer));
+                        
+                        int repeatCount = -1;
+                        if(XMLHelper.doesElementContainChildren(element, "repeatCount"))
+                        {
+                            repeatCount = XMLHelper.getChildAsInteger(element, "repeatCount");
+                        }
+                        
+                        game.addEntity(new RepeatingEntity(position, image, renderLayer, repeatCount));
                     }
                     catch(IOException e)
                     {

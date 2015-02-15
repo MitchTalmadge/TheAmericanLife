@@ -10,12 +10,14 @@ public class RepeatingEntity extends Entity
 {
     private Point position;
     private BufferedImage image;
+    private int repeatCount;
     
-    public RepeatingEntity(Point position, BufferedImage image, int renderLayer)
+    public RepeatingEntity(Point position, BufferedImage image, int renderLayer, int repeatCount)
     {
         super(renderLayer, new Component[] {});
         this.position = position;
         this.image = image;
+        this.repeatCount = repeatCount;
     }
     
     public BufferedImage getImage()
@@ -41,5 +43,10 @@ public class RepeatingEntity extends Entity
     public int getY()
     {
         return this.position.y;
+    }
+    
+    public int getRepeatCount()
+    {
+        return repeatCount;
     }
 }

@@ -2,11 +2,11 @@
 <level name="USA Joins WWI - April 6, 1917">
 	<properties>
 		<stage>
-			<width>852</width>
+			<width>1400</width>
 		</stage>
 		<player>
 			<position>20,350</position>
-			<renderLayer>3</renderLayer>
+			<renderLayer>4</renderLayer>
 			<spriteSheet>BusinessMan.png</spriteSheet>
 			<spriteDimensions>11,19</spriteDimensions>
 			<desiredDimensions>22,38</desiredDimensions>
@@ -17,11 +17,11 @@
 	</properties>
 	<years>
 		<year>
-			<text>1915</text>
+			<text>1916</text>
 			<stageX>0</stageX>
 		</year>
 		<year>
-			<text>1916</text>
+			<text>1917 - Entering the War</text>
 			<stageX>852</stageX>
 		</year>
 	</years>
@@ -43,6 +43,7 @@
 			<w>852</w>
 			<h>251</h>
 			<renderLayer>1</renderLayer>
+			<repeatCount>2</repeatCount>
 		</entity>
 		<entity type="Repeating">
 			<position>0,270</position>
@@ -53,5 +54,32 @@
 			<h>50</h>
 			<renderLayer>2</renderLayer>
 		</entity>
+		<entity type="Positioned">
+            <position>1904,342</position>
+            <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOfficeDoor.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>28</w>
+            <h>46</h>
+            <renderLayer>3</renderLayer>
+        </entity>
+		<entity type="Positioned">
+            <position>1932,291</position>
+            <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOffice.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>264</w>
+            <h>97</h>
+            <renderLayer>5</renderLayer>
+        </entity>
+        <entity type="Positioned">
+            <position>1932,291</position>
+            <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOfficeBack.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>264</w>
+            <h>97</h>
+            <renderLayer>3</renderLayer>
+        </entity>
 	</entities>
 </level>

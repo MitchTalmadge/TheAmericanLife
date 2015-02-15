@@ -36,7 +36,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     
     private boolean[] keysDown = new boolean[2];
     private final int scrollSpeed = 1;
-    private final int scrollInc = 2;
+    private final int scrollInc = 8; //Multiple of 2
     private int speedCounter = 0;
     private int cameraX = 0;
     
@@ -57,6 +57,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private final int titleFadeTime = 100;
     
     private TreeMap<Integer, ArrayList<Entity>> entitiesMap = new TreeMap<Integer, ArrayList<Entity>>();
+    private Set<Integer> entitiesKeySet = entitiesMap.keySet();
     private HashMap<Integer, String> yearsMap = new HashMap<Integer, String>();
     
     private LevelManager levelManager;
@@ -114,6 +115,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         gameLoop.registerGameLoopListener(this);
         
         this.entitiesMap.clear();
+        this.entitiesKeySet = entitiesMap.keySet();
         this.yearsMap.clear();
         
         this.titleSolidCounter = 0;
@@ -240,8 +242,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     @Override
     public void paint(Graphics g)
     {
-        Set<Integer> keySet = entitiesMap.keySet();
-        for(Integer i : keySet)
+        for(Integer i : entitiesKeySet)
         {
             ArrayList<Entity> entityArray = entitiesMap.get(i);
             for(Entity entity : entityArray)
@@ -266,9 +267,17 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                 else if(entity instanceof RepeatingEntity)
                 {
                     RepeatingEntity repeatingEntity = (RepeatingEntity) entity;
+                    
+                    int numRepeats = repeatingEntity.getRepeatCount();
+                    numRepeats -= Math.abs(Math.floor(((double)cameraX / repeatingEntity.getWidth())));
+                    
                     int repeatCount = (int) Math.ceil((double) this.getWidth() / repeatingEntity.getWidth());
                     if(cameraX % repeatingEntity.getWidth() > 0)
                         repeatCount++;
+                    
+                    if(repeatCount > numRepeats && numRepeats >= 0)
+                        repeatCount = numRepeats;
+                    
                     for(int j = 0; j < repeatCount; j++)
                         drawGraphics.drawImage(repeatingEntity.getImage(), repeatingEntity.getX() + (j * repeatingEntity.getWidth()) - (cameraX % repeatingEntity.getWidth()), repeatingEntity.getY() + borderHeight, null);
                 }
