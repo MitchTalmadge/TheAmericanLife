@@ -5,11 +5,11 @@
 	       <width>1000</width>
 	    </stage>
 	    <player>
-	       <position>20,350</position>
+	       <position>20,360</position>
 	       <renderLayer>3</renderLayer>
-	       <spriteSheet>BusinessMan.png</spriteSheet>
-	       <spriteDimensions>11,19</spriteDimensions>
-	       <desiredDimensions>22,38</desiredDimensions>
+	       <spriteSheet>Soldier.png</spriteSheet>
+	       <spriteDimensions>16,20</spriteDimensions>
+	       <desiredDimensions>32,40</desiredDimensions>
 	    </player>
 		<playList>
 			<song>MadWorld.mp3</song>
@@ -19,7 +19,7 @@
 		<entity type="Repeating">
             <position>0,0</position>
             <imagePath>textures/Sky.png</imagePath>
-            <u>0</u>
+            <u>100</u>
             <v>0</v>
             <w>100</w>
             <h>400</h>

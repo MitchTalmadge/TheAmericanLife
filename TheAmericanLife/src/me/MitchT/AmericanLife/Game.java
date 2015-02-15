@@ -34,9 +34,10 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
 {
     public static Game instance;
     
-    private boolean[] keysDown = new boolean[2];
+    private boolean[] keysDown = new boolean[3];
     private final int scrollSpeed = 1;
-    private final int scrollInc = 8; //Multiple of 2
+    private final int scrollInc = 2; //Multiple of 2
+    private final int scrollIncSprint = 4; //Multiple of 2
     private int speedCounter = 0;
     private int cameraX = 0;
     
@@ -191,7 +192,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                 transitionCounter++;
             }
         }
-        else if(player.getPosition().x > getWidth() - fadeDarkWidth && cameraX == stageWidth) //End of Level
+        else if(player.getPosition().x > getWidth() - fadeDarkWidth && cameraX >= stageWidth) //End of Level
         {
             playerExiting = true;
         }
@@ -201,34 +202,34 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         else if(titleFadeCounter < titleFadeTime)
             titleFadeCounter++;
         
-        if(speedCounter == scrollSpeed && (keysDown[0] || keysDown[1]))
+        if((!keysDown[0] && !keysDown[1]) || (keysDown[0] && keysDown[1]))
+            speedCounter = scrollSpeed;
+        else if(speedCounter == scrollSpeed && (keysDown[0] || keysDown[1]))
         {
             speedCounter = 0;
             if(keysDown[0]) //Left
             {
                 if((cameraX == stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == 0 && player.getPosition().x > 0))
                 {
-                    player.setPosition(new Point(player.getPosition().x - scrollInc, player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
                 else if(cameraX == 0 && player.getPosition().x > 0)
                 {
-                    player.setPosition(new Point(player.getPosition().x - scrollInc, player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
                 else if(cameraX > 0)
-                    cameraX -= scrollInc;
+                    cameraX -= (keysDown[2] ? scrollIncSprint : scrollInc);
             }
             if(keysDown[1]) //Right
             {
-                if((cameraX == 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == stageWidth && player.getPosition().x < getWidth()))
+                if((cameraX == 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX >= stageWidth && player.getPosition().x < getWidth()))
                 {
-                    player.setPosition(new Point(player.getPosition().x + scrollInc, player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x + (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
                 else if(cameraX < stageWidth)
-                    cameraX += scrollInc;
+                    cameraX += (keysDown[2] ? scrollIncSprint : scrollInc);
             }
         }
-        else if(!keysDown[0] && !keysDown[1])
-            speedCounter = scrollSpeed;
         else if(speedCounter < scrollSpeed)
             speedCounter++;
     }
@@ -390,6 +391,10 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         {
             keysDown[1] = true;
         }
+        else if(event.getKeyCode() == KeyEvent.VK_SHIFT)
+        {
+            keysDown[2] = true;
+        }
     }
     
     @Override
@@ -402,6 +407,10 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         else if(event.getKeyCode() == KeyEvent.VK_D || event.getKeyCode() == KeyEvent.VK_RIGHT)
         {
             keysDown[1] = false;
+        }
+        else if(event.getKeyCode() == KeyEvent.VK_SHIFT)
+        {
+            keysDown[2] = false;
         }
         else if(event.getKeyCode() == KeyEvent.VK_ESCAPE)
         {

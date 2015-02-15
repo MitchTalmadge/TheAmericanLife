@@ -14,7 +14,8 @@ import me.MitchT.AmericanLife.Components.Component;
 public class PlayerEntity extends Entity implements GameLoopListener
 {
     private int animationFrame = 0;
-    private final int animationSpeed = 10;
+    private final int animationSpeed = 20;
+    private final int animationSpeedSprint = 10;
     private int animationCounter = 0;
     private boolean lookDir = true;
     
@@ -88,7 +89,12 @@ public class PlayerEntity extends Entity implements GameLoopListener
     {
         boolean[] keysDown = Game.instance.getKeysDown();
         
-        if(animationCounter == animationSpeed && (keysDown[0] || keysDown[1]))
+        if((!keysDown[0] && !keysDown[1]) || (keysDown[0] && keysDown[1]))
+        {
+            setAnimationFrame(0);
+            animationCounter = animationSpeed;
+        }
+        else if(animationCounter >= (keysDown[2] ? animationSpeedSprint : animationSpeed) && (keysDown[0] || keysDown[1]))
         {
             animationCounter = 0;
             if(getAnimationFrame() == 2)
@@ -104,12 +110,7 @@ public class PlayerEntity extends Entity implements GameLoopListener
                 this.lookDir = true;
             }
         }
-        else if(!keysDown[0] && !keysDown[1])
-        {
-            setAnimationFrame(0);
-            animationCounter = animationSpeed;
-        }
-        else if(animationCounter < animationSpeed)
+        else if(animationCounter < (keysDown[2] ? animationSpeedSprint : animationSpeed))
             animationCounter++;
     }
     

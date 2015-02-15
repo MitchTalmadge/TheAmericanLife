@@ -37,7 +37,7 @@
 		</entity>
 		<entity type="Repeating">
 			<position>0,19</position>
-			<imagePath>textures/Buildings2.png</imagePath>
+			<imagePath>textures/Buildings.png</imagePath>
 			<u>0</u>
 			<v>0</v>
 			<w>852</w>
