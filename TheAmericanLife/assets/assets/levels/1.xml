@@ -55,20 +55,11 @@
 			<renderLayer>2</renderLayer>
 		</entity>
 		<entity type="Positioned">
-            <position>1904,342</position>
-            <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOfficeDoor.png</imagePath>
-            <u>0</u>
-            <v>0</v>
-            <w>28</w>
-            <h>46</h>
-            <renderLayer>3</renderLayer>
-        </entity>
-		<entity type="Positioned">
-            <position>1932,291</position>
+            <position>1904,291</position>
             <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOffice.png</imagePath>
             <u>0</u>
             <v>0</v>
-            <w>264</w>
+            <w>292</w>
             <h>97</h>
             <renderLayer>5</renderLayer>
         </entity>

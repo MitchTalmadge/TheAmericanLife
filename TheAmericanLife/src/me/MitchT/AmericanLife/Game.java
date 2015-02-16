@@ -209,7 +209,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             speedCounter = 0;
             if(keysDown[0]) //Left
             {
-                if((cameraX == stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == 0 && player.getPosition().x > 0))
+                if((cameraX >= stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == 0 && player.getPosition().x > 0))
                 {
                     player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }

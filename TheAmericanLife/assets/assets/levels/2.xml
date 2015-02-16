@@ -5,7 +5,7 @@
 	       <width>1000</width>
 	    </stage>
 	    <player>
-	       <position>20,360</position>
+	       <position>20,366</position>
 	       <renderLayer>3</renderLayer>
 	       <spriteSheet>Soldier.png</spriteSheet>
 	       <spriteDimensions>16,20</spriteDimensions>
@@ -26,12 +26,12 @@
             <renderLayer>0</renderLayer>
         </entity>
         <entity type="Repeating">
-            <position>0,270</position>
-            <imagePath>textures/Road.png</imagePath>
+            <position>0,261</position>
+            <imagePath>textures/Trenches.png</imagePath>
             <u>0</u>
             <v>0</v>
-            <w>100</w>
-            <h>50</h>
+            <w>400</w>
+            <h>51</h>
             <renderLayer>2</renderLayer>
         </entity>
 	</entities>
