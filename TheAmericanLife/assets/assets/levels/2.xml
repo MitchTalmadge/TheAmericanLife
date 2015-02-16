@@ -34,5 +34,14 @@
             <h>51</h>
             <renderLayer>2</renderLayer>
         </entity>
+        <entity type="Repeating">
+            <position>0,235</position>
+            <imagePath>textures/SandBags.png</imagePath>
+            <u>0</u>
+            <v>0</v>
+            <w>402</w>
+            <h>32</h>
+            <renderLayer>3</renderLayer>
+        </entity>
 	</entities>
 </level>

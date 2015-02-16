@@ -170,6 +170,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             {
                 transitionCounter++;
             }
+            return;
         }
         else if(playerExiting)
         {
@@ -191,6 +192,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             {
                 transitionCounter++;
             }
+            return;
         }
         else if(player.getPosition().x > getWidth() - fadeDarkWidth && cameraX >= stageWidth) //End of Level
         {
@@ -202,6 +204,11 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         else if(titleFadeCounter < titleFadeTime)
             titleFadeCounter++;
         
+        if(cameraX < 0)
+            cameraX = 0;
+        if(cameraX > stageWidth)
+            cameraX = stageWidth;
+        
         if((!keysDown[0] && !keysDown[1]) || (keysDown[0] && keysDown[1]))
             speedCounter = scrollSpeed;
         else if(speedCounter == scrollSpeed && (keysDown[0] || keysDown[1]))
@@ -209,11 +216,11 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             speedCounter = 0;
             if(keysDown[0]) //Left
             {
-                if((cameraX >= stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX == 0 && player.getPosition().x > 0))
+                if((cameraX >= stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX <= 0 && player.getPosition().x > 0))
                 {
                     player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
-                else if(cameraX == 0 && player.getPosition().x > 0)
+                else if(cameraX <= 0 && player.getPosition().x > 0)
                 {
                     player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
@@ -222,7 +229,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             }
             if(keysDown[1]) //Right
             {
-                if((cameraX == 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX >= stageWidth && player.getPosition().x < getWidth()))
+                if((cameraX <= 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX >= stageWidth && player.getPosition().x < getWidth()))
                 {
                     player.setPosition(new Point(player.getPosition().x + (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
@@ -415,6 +422,14 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         else if(event.getKeyCode() == KeyEvent.VK_ESCAPE)
         {
             System.exit(0);
+        }
+        else if(event.getKeyCode() == KeyEvent.VK_X)
+        {
+            loadLevel(levelManager.getCurrentLevelId()+1);
+        }
+        else if(event.getKeyCode() == KeyEvent.VK_Z)
+        {
+            loadLevel(levelManager.getCurrentLevelId()-1);
         }
     }
     
