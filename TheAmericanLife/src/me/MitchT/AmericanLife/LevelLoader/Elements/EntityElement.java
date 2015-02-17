@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import me.MitchT.AmericanLife.Entities.PositionedEntity;
+import me.MitchT.AmericanLife.Entities.PosterEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.InvalidLevelException;
@@ -96,6 +97,29 @@ public class EntityElement extends LevelElement
                         image = ImageIO.read(getClass().getResource(imagePath));
                         image = image.getSubimage(u, v, w, h);
                         game.addEntity(new PositionedEntity(position, image, renderLayer));
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else if(element.getAttribute("type").equals("Poster"))
+            {
+                if(XMLHelper.doesElementContainChildren(element, "position", "imagePathSmall", "imagePathFull", "renderLayer"))
+                {
+                    Point position = XMLHelper.getChildAsPoint(element, "position");
+                    String imagePathSmall = "/assets/images/textures/posters/" + XMLHelper.getChildAsString(element, "imagePathSmall");
+                    String imagePathFull = "/assets/images/textures/posters/" + XMLHelper.getChildAsString(element, "imagePathFull");
+                    int renderLayer = XMLHelper.getChildAsInteger(element, "renderLayer");
+                    BufferedImage imageSmall = null;
+                    BufferedImage imageFull = null;
+                    try
+                    {
+                        imageSmall = ImageIO.read(getClass().getResource(imagePathSmall));
+                        imageFull = ImageIO.read(getClass().getResource(imagePathFull));
+                        
+                        game.addEntity(new PosterEntity(position, imageSmall, imageFull, renderLayer));
                     }
                     catch(IOException e)
                     {

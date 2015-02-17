@@ -55,7 +55,7 @@
 			<renderLayer>2</renderLayer>
 		</entity>
 		<entity type="Positioned">
-            <position>1904,291</position>
+            <position>1904,191</position>
             <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOffice.png</imagePath>
             <u>0</u>
             <v>0</v>
@@ -64,13 +64,61 @@
             <renderLayer>5</renderLayer>
         </entity>
         <entity type="Positioned">
-            <position>1932,291</position>
+            <position>1932,191</position>
             <imagePath>textures/buildings/RecruitmentOffice/RecruitmentOfficeBack.png</imagePath>
             <u>0</u>
             <v>0</v>
             <w>264</w>
             <h>97</h>
             <renderLayer>3</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>895,231</position>
+            <imagePathSmall>1.png</imagePathSmall>
+            <imagePathFull>1Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1009,229</position>
+            <imagePathSmall>2.png</imagePathSmall>
+            <imagePathFull>2Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1061,231</position>
+            <imagePathSmall>3.png</imagePathSmall>
+            <imagePathFull>3Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1178,229</position>
+            <imagePathSmall>4.png</imagePathSmall>
+            <imagePathFull>4Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1310,225</position>
+            <imagePathSmall>5.png</imagePathSmall>
+            <imagePathFull>5Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1428,229</position>
+            <imagePathSmall>6.png</imagePathSmall>
+            <imagePathFull>6Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1522,231</position>
+            <imagePathSmall>7.png</imagePathSmall>
+            <imagePathFull>7Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
+        </entity>
+        <entity type="Poster">
+            <position>1622,229</position>
+            <imagePathSmall>8.png</imagePathSmall>
+            <imagePathFull>8Full.jpg</imagePathFull>
+            <renderLayer>2</renderLayer>
         </entity>
 	</entities>
 </level>

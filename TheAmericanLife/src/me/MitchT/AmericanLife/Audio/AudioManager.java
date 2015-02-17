@@ -5,7 +5,7 @@ import java.util.concurrent.locks.LockSupport;
 public class AudioManager
 {
     
-    private boolean musicEnabled = false;
+    private boolean musicEnabled = true;
     private AudioThread thread;
     private String[] playlist;
     

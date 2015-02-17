@@ -25,6 +25,7 @@ import me.MitchT.AmericanLife.Audio.AudioManager;
 import me.MitchT.AmericanLife.Entities.Entity;
 import me.MitchT.AmericanLife.Entities.PlayerEntity;
 import me.MitchT.AmericanLife.Entities.PositionedEntity;
+import me.MitchT.AmericanLife.Entities.PosterEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.LevelManager;
@@ -34,7 +35,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
 {
     public static Game instance;
     
-    private boolean[] keysDown = new boolean[3];
+    private boolean[] keysDown = new boolean[4];
     private final int scrollSpeed = 1;
     private final int scrollInc = 2; //Multiple of 2
     private final int scrollIncSprint = 4; //Multiple of 2
@@ -50,8 +51,12 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private final int borderHeight = 100;
     private final int fadeWidth = 200;
     private final int fadeDarkWidth = 50;
+    
     private Font titleFont;
     private Font yearFont;
+    private Font hintFont;
+    private final String posterString = "Push DOWN to view the full poster!";
+    
     private int titleSolidCounter = 0;
     private int titleFadeCounter = 0;
     private final int titleSolidTime = 100;
@@ -92,6 +97,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         
         this.titleFont = getFont().deriveFont(30f);
         this.yearFont = getFont().deriveFont(30f);
+        this.hintFont = getFont().deriveFont(15f);
         
         //---- Managers ----//
         this.levelManager = new LevelManager();
@@ -126,6 +132,8 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         this.speedCounter = 0;
         this.keysDown[0] = false;
         this.keysDown[1] = false;
+        this.keysDown[2] = false;
+        this.keysDown[3] = false;
         
         this.playerEntering = true;
         this.playerExiting = false;
@@ -218,23 +226,23 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             {
                 if((cameraX >= stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX <= 0 && player.getPosition().x > 0))
                 {
-                    player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x - (keysDown[3] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
                 else if(cameraX <= 0 && player.getPosition().x > 0)
                 {
-                    player.setPosition(new Point(player.getPosition().x - (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x - (keysDown[3] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
                 else if(cameraX > 0)
-                    cameraX -= (keysDown[2] ? scrollIncSprint : scrollInc);
+                    cameraX -= (keysDown[3] ? scrollIncSprint : scrollInc);
             }
             if(keysDown[1]) //Right
             {
                 if((cameraX <= 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX >= stageWidth && player.getPosition().x < getWidth()))
                 {
-                    player.setPosition(new Point(player.getPosition().x + (keysDown[2] ? scrollIncSprint : scrollInc), player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x + (keysDown[3] ? scrollIncSprint : scrollInc), player.getPosition().y));
                 }
                 else if(cameraX < stageWidth)
-                    cameraX += (keysDown[2] ? scrollIncSprint : scrollInc);
+                    cameraX += (keysDown[3] ? scrollIncSprint : scrollInc);
             }
         }
         else if(speedCounter < scrollSpeed)
@@ -250,6 +258,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     @Override
     public void paint(Graphics g)
     {
+        PosterEntity posterToDraw = null;
         for(Integer i : entitiesKeySet)
         {
             ArrayList<Entity> entityArray = entitiesMap.get(i);
@@ -294,7 +303,19 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     PositionedEntity positionedEntity = (PositionedEntity) entity;
                     if(cameraX + getWidth() > positionedEntity.getX() && cameraX < positionedEntity.getX() + positionedEntity.getWidth())
                     {
-                        drawGraphics.drawImage(positionedEntity.getImage(), positionedEntity.getX() - cameraX, positionedEntity.getY(), null);
+                        drawGraphics.drawImage(positionedEntity.getImage(), positionedEntity.getX() - cameraX, positionedEntity.getY()+borderHeight, null);
+                    }
+                }
+                else if(entity instanceof PosterEntity)
+                {
+                    PosterEntity posterEntity = (PosterEntity) entity;
+                    if(cameraX + getWidth() > posterEntity.getX() && cameraX < posterEntity.getX() + posterEntity.getPosterImageSmall().getWidth())
+                    {
+                        drawGraphics.drawImage(posterEntity.getPosterImageSmall(), posterEntity.getX() - cameraX, posterEntity.getY()+borderHeight, null);
+                        if(player.getPosition().getX() + player.getAnimationFrameImage().getWidth(null) >= posterEntity.getX() - cameraX && player.getPosition().getX() <= posterEntity.getX() - cameraX + posterEntity.getPosterImageSmall().getWidth())
+                        {
+                            posterToDraw = posterEntity;
+                        }
                     }
                 }
             }
@@ -355,6 +376,18 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             }
         }
         
+        //---- Draw Poster Full ----//
+        if(posterToDraw != null && !keysDown[2])
+        {
+            drawGraphics.setColor(Color.WHITE);
+            drawGraphics.setFont(hintFont);
+            drawGraphics.drawString(posterString, getWidth()/2 - (drawGraphics.getFontMetrics(hintFont).stringWidth(posterString)/2), getHeight() - 20);
+        }
+        else if(posterToDraw != null)
+        {
+            drawGraphics.drawImage(posterToDraw.getPosterImageFull(), getWidth()/2 - posterToDraw.getPosterImageFull().getWidth()/2, getHeight()/2 - posterToDraw.getPosterImageFull().getHeight()/2, null);
+        }
+        
         g.drawImage(drawBuffer, 0, 0, null);
     }
     
@@ -398,26 +431,34 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         {
             keysDown[1] = true;
         }
-        else if(event.getKeyCode() == KeyEvent.VK_SHIFT)
+        else if(event.getKeyCode() == KeyEvent.VK_DOWN)
         {
             keysDown[2] = true;
+        }
+        else if(event.getKeyCode() == KeyEvent.VK_SHIFT)
+        {
+            keysDown[3] = true;
         }
     }
     
     @Override
     public void keyReleased(KeyEvent event)
     {
-        if(event.getKeyCode() == KeyEvent.VK_A || event.getKeyCode() == KeyEvent.VK_LEFT)
+        if(event.getKeyCode() == KeyEvent.VK_LEFT)
         {
             keysDown[0] = false;
         }
-        else if(event.getKeyCode() == KeyEvent.VK_D || event.getKeyCode() == KeyEvent.VK_RIGHT)
+        else if(event.getKeyCode() == KeyEvent.VK_RIGHT)
         {
             keysDown[1] = false;
         }
-        else if(event.getKeyCode() == KeyEvent.VK_SHIFT)
+        else if(event.getKeyCode() == KeyEvent.VK_DOWN)
         {
             keysDown[2] = false;
+        }
+        else if(event.getKeyCode() == KeyEvent.VK_SHIFT)
+        {
+            keysDown[3] = false;
         }
         else if(event.getKeyCode() == KeyEvent.VK_ESCAPE)
         {

@@ -94,7 +94,7 @@ public class PlayerEntity extends Entity implements GameLoopListener
             setAnimationFrame(0);
             animationCounter = animationSpeed;
         }
-        else if(animationCounter >= (keysDown[2] ? animationSpeedSprint : animationSpeed) && (keysDown[0] || keysDown[1]))
+        else if(animationCounter >= (keysDown[3] ? animationSpeedSprint : animationSpeed) && (keysDown[0] || keysDown[1]))
         {
             animationCounter = 0;
             if(getAnimationFrame() == 2)
@@ -110,7 +110,7 @@ public class PlayerEntity extends Entity implements GameLoopListener
                 this.lookDir = true;
             }
         }
-        else if(animationCounter < (keysDown[2] ? animationSpeedSprint : animationSpeed))
+        else if(animationCounter < (keysDown[3] ? animationSpeedSprint : animationSpeed))
             animationCounter++;
     }
     
