@@ -2,7 +2,7 @@
 <level name="A Nation in Distress | 1919">
 	<properties>
 		<stage>
-			<width>1400</width>
+			<width>1000</width>
 		</stage>
 		<player>
 			<position>20,350</position>
@@ -16,6 +16,38 @@
 			<song>Name.mp3</song>
 		</playList>
 	</properties>
+	<dialogues>
+        <dialogue>
+            <topText>It was 1919, two years after he had foolishly decided to join WWI.</topText>
+            <topText>Had Thomas known the effects of the war at the time, he would never have enlisted.</topText>
+            <bottomText>1919</bottomText>
+            <stageX>0</stageX>
+        </dialogue>
+        <dialogue>
+            <topText>The former business man brought home an injured and forever scarred soul.</topText>
+            <topText>Thomas may have lost a leg in the war, but his physical injuries couldn't compare to the mental insanity</topText>
+            <topText>brought upon by the constant screams of agony and the thundering of explosions on the battlefield.</topText>
+            <bottomText></bottomText>
+            <stageX>400</stageX>
+        </dialogue>
+        <dialogue>
+            <topText>What he cared about most was his family, but something had changed after those two horrible years.</topText>
+            <topText>His wife was upset, she believed nothing good came from that war, and was struggling to get food on the table.</topText>
+            <topText> </topText>
+            <topText>Thomas' kids also changed drastically.</topText>
+            <topText>Every day for the past two years, they had no father to meet at the door after he returned home from work.</topText>
+            <topText>He was gone, and it was unknown when, or even if he would come back.</topText>
+            <bottomText></bottomText>
+            <stageX>800</stageX>
+        </dialogue>
+        <dialogue>
+            <topText>When he finally arrived home, his children were shocked.</topText>
+            <topText>They stared at a man who they did not recognize.</topText>
+            <topText>They saw a broken man, no longer the father they once knew.</topText>
+            <bottomText></bottomText>
+            <stageX>1400</stageX>
+        </dialogue>
+    </dialogues>
 	<entities>
 		<entity type="Repeating">
 			<position>0,0</position>
@@ -33,6 +65,7 @@
 			<v>0</v>
 			<w>852</w>
 			<h>251</h>
+			<repeatCount>2</repeatCount>
 			<renderLayer>1</renderLayer>
 		</entity>
 		<entity type="Repeating">

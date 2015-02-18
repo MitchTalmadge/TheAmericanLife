@@ -3,6 +3,7 @@ package me.MitchT.AmericanLife.LevelLoader;
 import java.awt.Point;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class XMLHelper
 {
@@ -70,6 +71,21 @@ public class XMLHelper
         if(doesElementContainChildren(parent, childName))
         {
             return getFirstChildElement(parent, childName).getTextContent();
+        }
+        return null;
+    }
+    
+    public static String[] getChildrenAsStrings(Element parent, String childName)
+    {
+        if(doesElementContainChildren(parent, childName))
+        {
+            NodeList children = parent.getElementsByTagName(childName);
+            String[] strings = new String[children.getLength()];
+            for(int i = 0; i < children.getLength(); i++)
+            {
+                strings[i] = children.item(i).getTextContent();
+            }
+            return strings;
         }
         return null;
     }

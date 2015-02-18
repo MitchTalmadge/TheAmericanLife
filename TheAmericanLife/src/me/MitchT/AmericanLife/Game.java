@@ -12,12 +12,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -31,6 +33,7 @@ import me.MitchT.AmericanLife.Entities.RepeatingEntity;
 import me.MitchT.AmericanLife.Entities.StaticEntity;
 import me.MitchT.AmericanLife.LevelLoader.LevelManager;
 import me.MitchT.AmericanLife.LevelLoader.LevelsEnum;
+import me.MitchT.AmericanLife.MainMenu.MainMenu;
 
 public class Game extends Canvas implements GameLoopListener, KeyListener
 {
@@ -47,12 +50,18 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     private final int transitionInc = 10;
     private int transitionCounter = 0;
     
+    private boolean gameOver = false;
+    private final int gameOverScrollSpeed = 1;
+    private int gameOverCounter = 0;
+    private BufferedImage creditsImage;
+    
     private final int borderHeight = 100;
     private final int fadeWidth = 200;
     private final int fadeDarkWidth = 50;
     
     private Font titleFont;
-    private Font yearFont;
+    private Font topDialogueFont;
+    private Font bottomDialogueFont;
     private Font hintFont;
     private final String posterString = "Push DOWN to view the full poster!";
     
@@ -63,7 +72,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     
     private TreeMap<Integer, ArrayList<Entity>> entitiesMap = new TreeMap<Integer, ArrayList<Entity>>();
     private Set<Integer> entitiesKeySet = entitiesMap.keySet();
-    private HashMap<Integer, String> yearsMap = new HashMap<Integer, String>();
+    private HashMap<Integer, String[]> dialogueMap = new HashMap<Integer, String[]>();
     
     private LevelManager levelManager;
     private AudioManager audioManager;
@@ -94,8 +103,18 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         drawBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
         drawGraphics = (Graphics2D) drawBuffer.getGraphics();
         
+        try
+        {
+            creditsImage = ImageIO.read(getClass().getResource("/assets/images/Credits.png"));
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+        
         this.titleFont = getFont().deriveFont(30f);
-        this.yearFont = getFont().deriveFont(30f);
+        this.topDialogueFont = getFont().deriveFont(15f);
+        this.bottomDialogueFont = getFont().deriveFont(30f);
         this.hintFont = getFont().deriveFont(15f);
         
         //---- Managers ----//
@@ -122,7 +141,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         
         this.entitiesMap.clear();
         this.entitiesKeySet = entitiesMap.keySet();
-        this.yearsMap.clear();
+        this.dialogueMap.clear();
         
         this.titleSolidCounter = 0;
         this.titleFadeCounter = 0;
@@ -178,6 +197,44 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             }
             return;
         }
+        else if(gameOver)
+        {
+            if(gameOverCounter <= creditsImage.getHeight() + getHeight())
+                gameOverCounter += gameOverScrollSpeed;
+            else
+            {
+              //---- Clean Up ----//
+                this.audioManager.stop();
+                
+                if(this.gameLoop != null)
+                    gameLoop.dispose();
+                gameLoop = new GameLoop();
+                gameLoop.registerGameLoopListener(this);
+                
+                this.entitiesMap.clear();
+                this.entitiesKeySet = entitiesMap.keySet();
+                this.dialogueMap.clear();
+                
+                this.titleSolidCounter = 0;
+                this.titleFadeCounter = 0;
+                
+                this.cameraX = -getWidth();
+                this.speedCounter = 0;
+                this.keysDown[0] = false;
+                this.keysDown[1] = false;
+                this.keysDown[2] = false;
+                this.keysDown[3] = false;
+                
+                this.playerEntering = true;
+                this.playerExiting = false;
+                this.transitionCounter = 0;
+                
+                this.stageWidth = getWidth();
+                this.player = null;
+                System.exit(0);
+            }
+            return;
+        }
         else if(playerExiting)
         {
             clearKeysDown();
@@ -191,6 +248,8 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     int nextLevelId = this.levelManager.getCurrentLevelId() + 1;
                     if(LevelsEnum.getXmlPathByLevelID(nextLevelId) != null)
                         loadLevel(nextLevelId);
+                    else
+                        gameOver = true;
                     return;
                 }
             }
@@ -256,6 +315,15 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     @Override
     public void paint(Graphics g)
     {
+        if(gameOver)
+        {
+            drawGraphics.setColor(Color.BLACK);
+            drawGraphics.fillRect(0, 0, getWidth(), getHeight());
+            
+            drawGraphics.drawImage(creditsImage, getWidth()/2 - creditsImage.getWidth()/2, getHeight() - gameOverCounter, null);
+            g.drawImage(drawBuffer, 0, 0, null);
+            return;
+        }
         PosterEntity posterToDraw = null;
         for(Integer i : entitiesKeySet)
         {
@@ -366,20 +434,42 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             drawGraphics.drawString(levelManager.getCurrentLevelName(), this.getWidth() / 2 - strWidth / 2, borderHeight - 10);
         }
         
-        //---- Draw Years ----//
-        for(Entry<Integer, String> entry : yearsMap.entrySet())
+        String[] dialogueTexts = null;
+        int maxDialogueX = 0;
+        
+        //---- Draw Dialogue ----//
+        for(Entry<Integer, String[]> entry : dialogueMap.entrySet())
         {
             int stageX = entry.getKey();
-            String text = entry.getValue();
+            String[] text = entry.getValue();
             
-            int edgeOfYear = stageX + drawGraphics.getFontMetrics(yearFont).stringWidth(text) + 6;
+            String bottomText = text[text.length - 1];
             
-            if(edgeOfYear >= cameraX && stageX <= cameraX + getWidth())
+            int edgeOfDialogue = stageX + drawGraphics.getFontMetrics(bottomDialogueFont).stringWidth(bottomText) + 6;
+            
+            if(edgeOfDialogue >= cameraX && stageX <= cameraX + getWidth())
             {
                 drawGraphics.setColor(Color.WHITE);
-                drawGraphics.setFont(yearFont);
+                drawGraphics.setFont(bottomDialogueFont);
                 drawGraphics.fillRect(stageX - cameraX, this.getHeight() - borderHeight, 4, 30);
-                drawGraphics.drawString(text, stageX - cameraX + 6, this.getHeight() - borderHeight + 30);
+                drawGraphics.drawString(bottomText, stageX - cameraX + 6, this.getHeight() - borderHeight + 30);
+                
+            }
+            
+            if(player.getPosition().x >= stageX - cameraX && stageX >= maxDialogueX)
+            {
+                maxDialogueX = stageX;
+                dialogueTexts = text;
+            }
+        }
+        
+        if(titleFadeCounter >= titleFadeTime && dialogueTexts != null && !gameOver)
+        {
+            drawGraphics.setFont(topDialogueFont);
+            drawGraphics.setColor(Color.WHITE);
+            for(int i = 0; i < dialogueTexts.length - 1; i++)
+            {
+                drawGraphics.drawString(dialogueTexts[i], getWidth() / 2 - drawGraphics.getFontMetrics(topDialogueFont).stringWidth(dialogueTexts[i]) / 2, 15 + 15 * i);
             }
         }
         
@@ -509,8 +599,8 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         this.stageWidth = stageWidth;
     }
     
-    public void addYear(int stageX, String text)
+    public void addDialogue(int stageX, String[] texts)
     {
-        this.yearsMap.put(stageX, text);
+        this.dialogueMap.put(stageX, texts);
     }
 }

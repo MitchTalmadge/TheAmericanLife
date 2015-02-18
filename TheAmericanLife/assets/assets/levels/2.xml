@@ -16,6 +16,16 @@
 			<song>MadWorld.mp3</song>
 		</playList>
 	</properties>
+	<dialogues>
+        <dialogue>
+            <topText>As Thomas stepped into the mud, he could feel his boots starting to sink. This was war. It was very different from the city.</topText>
+            <topText>Everywhere he looked, the sky was a hazel color from all of the explosions.</topText>
+            <topText>The bitter scent of smoke filled the air, and he could feel his hands trembling under his rifle.</topText>
+            <topText>A million questions filled his head, but the biggest question was "Do I regret this?"</topText>
+            <bottomText>June 26, 1917</bottomText>
+            <stageX>0</stageX>
+        </dialogue>
+    </dialogues>
 	<entities>
 		<entity type="Repeating">
 			<position>0,0</position>

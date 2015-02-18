@@ -16,16 +16,34 @@
 			<song>MapleLeaf.mp3</song>
 		</playList>
 	</properties>
-	<years>
-		<year>
-			<text>1916</text>
+	<dialogues>
+		<dialogue>
+			<topText>This is Thomas, a common business man with a wife and three children at home.</topText>
+			<bottomText>1916</bottomText>
 			<stageX>0</stageX>
-		</year>
-		<year>
-			<text>1917 - Entering the War</text>
+		</dialogue>
+		<dialogue>
+		  <topText>As Thomas walked through the bustling town, his eyes kept glancing at the persuasive propaganda posters around him.</topText>
+		    <topText>Each poster was bright, and made the war seem like an easy experience.</topText>
+			<bottomText>April 6, 1917</bottomText>
 			<stageX>852</stageX>
-		</year>
-	</years>
+		</dialogue>
+		<dialogue>
+          <topText>With each new poster, the gears in his mind began to turn. "Maybe enlisting wouldn't be a bad idea after all," he thought.</topText>
+            <topText>But was it really worth leaving his family?</topText>
+            <topText> </topText>
+            <topText>He felt that he owed it to his country to join the army; almost like he had no choice.</topText>
+            <bottomText></bottomText>
+            <stageX>1400</stageX>
+        </dialogue>
+        <dialogue>
+          <topText>After thinking long and hard, his mind was set. He would join the war...</topText>
+            <topText> </topText>
+            <topText>...even if it meant leaving the love of his life and their children behind.</topText>
+            <bottomText></bottomText>
+            <stageX>1904</stageX>
+        </dialogue>
+	</dialogues>
 	<entities>
 		<entity type="Repeating">
 			<position>0,0</position>
