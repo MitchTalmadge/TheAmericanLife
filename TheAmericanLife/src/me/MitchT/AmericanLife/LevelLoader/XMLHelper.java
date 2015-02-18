@@ -13,11 +13,14 @@ public class XMLHelper
         for(String childName : childNames)
         {
             if(parent.getElementsByTagName(childName).getLength() == 0)
+            {
                 missingChild = true;
+            }
         }
         if(missingChild)
             return false;
-        return true;
+        else 
+            return true;
     }
     
     public static Element getFirstChildElement(Element parent, String childName)

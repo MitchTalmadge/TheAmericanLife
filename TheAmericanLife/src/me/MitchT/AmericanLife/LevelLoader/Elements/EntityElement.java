@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import me.MitchT.AmericanLife.Entities.ExplosionEntity;
 import me.MitchT.AmericanLife.Entities.PositionedEntity;
 import me.MitchT.AmericanLife.Entities.PosterEntity;
 import me.MitchT.AmericanLife.Entities.RepeatingEntity;
@@ -120,6 +121,32 @@ public class EntityElement extends LevelElement
                         imageFull = ImageIO.read(getClass().getResource(imagePathFull));
                         
                         game.addEntity(new PosterEntity(position, imageSmall, imageFull, renderLayer));
+                    }
+                    catch(IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            else if(element.getAttribute("type").equals("Explosion"))
+            {
+                if(XMLHelper.doesElementContainChildren(element, "minimum", "maximum", "imagePath", "renderLayer", "frameWidth", "frameHeight", "frameCount", "frameDelay", "explosionFreq"))
+                {
+                    Point minimum = XMLHelper.getChildAsPoint(element, "minimum");
+                    Point maximum = XMLHelper.getChildAsPoint(element, "maximum");
+                    String imagePath = "/assets/images/spritesheets/explosions/" + XMLHelper.getChildAsString(element, "imagePath");
+                    int renderLayer = XMLHelper.getChildAsInteger(element, "renderLayer");
+                    int frameWidth = XMLHelper.getChildAsInteger(element, "frameWidth");
+                    int frameHeight = XMLHelper.getChildAsInteger(element, "frameHeight");
+                    int frameCount = XMLHelper.getChildAsInteger(element, "frameCount");
+                    int frameDelay = XMLHelper.getChildAsInteger(element, "frameDelay");
+                    int explosionFreq = XMLHelper.getChildAsInteger(element, "explosionFreq");
+                    BufferedImage image = null;
+                    try
+                    {
+                        image = ImageIO.read(getClass().getResource(imagePath));
+                        
+                        game.addEntity(new ExplosionEntity(renderLayer, minimum, maximum, image, frameWidth, frameHeight, frameCount, frameDelay, explosionFreq));
                     }
                     catch(IOException e)
                     {

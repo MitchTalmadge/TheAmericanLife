@@ -16,6 +16,7 @@ public class AudioManager
     
     public void startPlaylist()
     {
+        System.out.println("Playlist");
         stop();
         if(playlist != null && musicEnabled)
         {

@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 
 import me.MitchT.AmericanLife.Audio.AudioManager;
 import me.MitchT.AmericanLife.Entities.Entity;
+import me.MitchT.AmericanLife.Entities.ExplosionEntity;
 import me.MitchT.AmericanLife.Entities.PlayerEntity;
 import me.MitchT.AmericanLife.Entities.PositionedEntity;
 import me.MitchT.AmericanLife.Entities.PosterEntity;
@@ -153,7 +154,6 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         
         //---- Initialize ----//
         this.levelManager.loadLevel(levelId);
-        audioManager.startPlaylist();
         gameLoop.start();
     }
     
@@ -286,7 +286,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     RepeatingEntity repeatingEntity = (RepeatingEntity) entity;
                     
                     int numRepeats = repeatingEntity.getRepeatCount();
-                    numRepeats -= Math.abs(Math.floor(((double)cameraX / repeatingEntity.getWidth())));
+                    numRepeats -= Math.abs(Math.floor(((double) cameraX / repeatingEntity.getWidth())));
                     
                     int repeatCount = (int) Math.ceil((double) this.getWidth() / repeatingEntity.getWidth());
                     if(cameraX % repeatingEntity.getWidth() > 0)
@@ -303,7 +303,7 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     PositionedEntity positionedEntity = (PositionedEntity) entity;
                     if(cameraX + getWidth() > positionedEntity.getX() && cameraX < positionedEntity.getX() + positionedEntity.getWidth())
                     {
-                        drawGraphics.drawImage(positionedEntity.getImage(), positionedEntity.getX() - cameraX, positionedEntity.getY()+borderHeight, null);
+                        drawGraphics.drawImage(positionedEntity.getImage(), positionedEntity.getX() - cameraX, positionedEntity.getY() + borderHeight, null);
                     }
                 }
                 else if(entity instanceof PosterEntity)
@@ -311,11 +311,20 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
                     PosterEntity posterEntity = (PosterEntity) entity;
                     if(cameraX + getWidth() > posterEntity.getX() && cameraX < posterEntity.getX() + posterEntity.getPosterImageSmall().getWidth())
                     {
-                        drawGraphics.drawImage(posterEntity.getPosterImageSmall(), posterEntity.getX() - cameraX, posterEntity.getY()+borderHeight, null);
+                        drawGraphics.drawImage(posterEntity.getPosterImageSmall(), posterEntity.getX() - cameraX, posterEntity.getY() + borderHeight, null);
                         if(player.getPosition().getX() + player.getAnimationFrameImage().getWidth(null) >= posterEntity.getX() - cameraX && player.getPosition().getX() <= posterEntity.getX() - cameraX + posterEntity.getPosterImageSmall().getWidth())
                         {
                             posterToDraw = posterEntity;
                         }
+                    }
+                }
+                else if(entity instanceof ExplosionEntity)
+                {
+                    ExplosionEntity explosionEntity = (ExplosionEntity) entity;
+                    if(explosionEntity.shouldRender())
+                    {
+                        if(cameraX + getWidth() > explosionEntity.getCurrentPosition().getX() && cameraX < explosionEntity.getCurrentPosition().getX() + explosionEntity.getCurrentFrameImage().getWidth(null))
+                            drawGraphics.drawImage(explosionEntity.getCurrentFrameImage(), (int) explosionEntity.getCurrentPosition().getX() - cameraX, (int) explosionEntity.getCurrentPosition().getY() + borderHeight, null);
                     }
                 }
             }
@@ -381,11 +390,11 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         {
             drawGraphics.setColor(Color.WHITE);
             drawGraphics.setFont(hintFont);
-            drawGraphics.drawString(posterString, getWidth()/2 - (drawGraphics.getFontMetrics(hintFont).stringWidth(posterString)/2), getHeight() - 20);
+            drawGraphics.drawString(posterString, getWidth() / 2 - (drawGraphics.getFontMetrics(hintFont).stringWidth(posterString) / 2), getHeight() - 20);
         }
         else if(posterToDraw != null)
         {
-            drawGraphics.drawImage(posterToDraw.getPosterImageFull(), getWidth()/2 - posterToDraw.getPosterImageFull().getWidth()/2, getHeight()/2 - posterToDraw.getPosterImageFull().getHeight()/2, null);
+            drawGraphics.drawImage(posterToDraw.getPosterImageFull(), getWidth() / 2 - posterToDraw.getPosterImageFull().getWidth() / 2, getHeight() / 2 - posterToDraw.getPosterImageFull().getHeight() / 2, null);
         }
         
         g.drawImage(drawBuffer, 0, 0, null);
@@ -466,11 +475,11 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
         }
         else if(event.getKeyCode() == KeyEvent.VK_X)
         {
-            loadLevel(levelManager.getCurrentLevelId()+1);
+            loadLevel(levelManager.getCurrentLevelId() + 1);
         }
         else if(event.getKeyCode() == KeyEvent.VK_Z)
         {
-            loadLevel(levelManager.getCurrentLevelId()-1);
+            loadLevel(levelManager.getCurrentLevelId() - 1);
         }
     }
     

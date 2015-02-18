@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<level name="War">
+<level name="Trench Warfare | 1917 - 1918">
 	<properties>
 	    <stage>
 	       <width>1000</width>
 	    </stage>
 	    <player>
 	       <position>20,366</position>
-	       <renderLayer>3</renderLayer>
+	       <renderLayer>4</renderLayer>
 	       <spriteSheet>Soldier.png</spriteSheet>
 	       <spriteDimensions>16,20</spriteDimensions>
 	       <desiredDimensions>32,40</desiredDimensions>
@@ -42,6 +42,28 @@
             <w>402</w>
             <h>32</h>
             <renderLayer>3</renderLayer>
+        </entity>
+        <entity type="Explosion">
+            <minimum>100, 165</minimum>
+            <maximum>1500, 165</maximum>
+            <imagePath>Explosion1.png</imagePath>
+            <frameWidth>50</frameWidth>
+            <frameHeight>100</frameHeight>
+            <frameCount>27</frameCount>
+            <frameDelay>3</frameDelay>
+            <explosionFreq>120</explosionFreq>
+            <renderLayer>1</renderLayer>
+        </entity>
+        <entity type="Explosion">
+            <minimum>100, 165</minimum>
+            <maximum>1500, 165</maximum>
+            <imagePath>Explosion1.png</imagePath>
+            <frameWidth>50</frameWidth>
+            <frameHeight>100</frameHeight>
+            <frameCount>27</frameCount>
+            <frameDelay>3</frameDelay>
+            <explosionFreq>120</explosionFreq>
+            <renderLayer>1</renderLayer>
         </entity>
 	</entities>
 </level>
