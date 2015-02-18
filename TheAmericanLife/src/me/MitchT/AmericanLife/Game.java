@@ -38,8 +38,6 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
     
     private boolean[] keysDown = new boolean[4];
     private final int scrollSpeed = 1;
-    private final int scrollInc = 2; //Multiple of 2
-    private final int scrollIncSprint = 4; //Multiple of 2
     private int speedCounter = 0;
     private int cameraX = 0;
     
@@ -226,23 +224,23 @@ public class Game extends Canvas implements GameLoopListener, KeyListener
             {
                 if((cameraX >= stageWidth && player.getPosition().x > (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX <= 0 && player.getPosition().x > 0))
                 {
-                    player.setPosition(new Point(player.getPosition().x - (keysDown[3] ? scrollIncSprint : scrollInc), player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x - player.getWalkSpeed(), player.getPosition().y));
                 }
                 else if(cameraX <= 0 && player.getPosition().x > 0)
                 {
-                    player.setPosition(new Point(player.getPosition().x - (keysDown[3] ? scrollIncSprint : scrollInc), player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x - player.getWalkSpeed(), player.getPosition().y));
                 }
                 else if(cameraX > 0)
-                    cameraX -= (keysDown[3] ? scrollIncSprint : scrollInc);
+                    cameraX -= player.getWalkSpeed();
             }
             if(keysDown[1]) //Right
             {
                 if((cameraX <= 0 && player.getPosition().x < (getWidth() / 2 - (float) player.getDesiredDimensions().x / 2)) || (cameraX >= stageWidth && player.getPosition().x < getWidth()))
                 {
-                    player.setPosition(new Point(player.getPosition().x + (keysDown[3] ? scrollIncSprint : scrollInc), player.getPosition().y));
+                    player.setPosition(new Point(player.getPosition().x + player.getWalkSpeed(), player.getPosition().y));
                 }
                 else if(cameraX < stageWidth)
-                    cameraX += (keysDown[3] ? scrollIncSprint : scrollInc);
+                    cameraX += player.getWalkSpeed();
             }
         }
         else if(speedCounter < scrollSpeed)

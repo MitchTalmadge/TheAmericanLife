@@ -21,13 +21,13 @@ public class PlayerElement extends LevelElement
     {
         System.out.println("Processing PlayerElement");
         Element playerElement = elements.get(0);
-        if(XMLHelper.doesElementContainChildren(playerElement, "position", "renderLayer", "spriteSheet", "spriteDimensions", "desiredDimensions"))
+        if(XMLHelper.doesElementContainChildren(playerElement, "position", "renderLayer", "spriteSheet", "spriteDimensions", "desiredDimensions", "walkSpeed"))
         {
             System.out.println("Loading Player...");
             
             Point position = XMLHelper.getChildAsPoint(playerElement, "position");
-            
             int renderLayer = XMLHelper.getChildAsInteger(playerElement, "renderLayer");
+            int walkSpeed = XMLHelper.getChildAsInteger(playerElement, "walkSpeed");
             
             BufferedImage spriteSheet = null; 
             try
@@ -35,7 +35,7 @@ public class PlayerElement extends LevelElement
                 spriteSheet = ImageIO.read(getClass().getResource("/assets/images/spritesheets/"+XMLHelper.getChildAsString(playerElement, "spriteSheet")));
                 Point spriteDimensions = XMLHelper.getChildAsPoint(playerElement, "spriteDimensions");
                 Point desiredDimensions = XMLHelper.getChildAsPoint(playerElement, "desiredDimensions");
-                game.addEntity(new PlayerEntity(position, renderLayer, spriteSheet, spriteDimensions, desiredDimensions));
+                game.addEntity(new PlayerEntity(position, renderLayer, spriteSheet, spriteDimensions, desiredDimensions, walkSpeed));
             }
             catch(IOException e)
             {

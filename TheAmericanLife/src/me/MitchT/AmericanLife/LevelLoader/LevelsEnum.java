@@ -3,7 +3,8 @@ package me.MitchT.AmericanLife.LevelLoader;
 public enum LevelsEnum
 {
     LEVEL1(1, "/assets/levels/1.xml"),
-    LEVEL2(2, "/assets/levels/2.xml");
+    LEVEL2(2, "/assets/levels/2.xml"),
+    LEVEL3(3, "/assets/levels/3.xml");
     
     private int levelID;
     private String xmlFilePath;

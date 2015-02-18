@@ -1,69 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level name="Trench Warfare | 1917 - 1918">
 	<properties>
-	    <stage>
-	       <width>1000</width>
-	    </stage>
-	    <player>
-	       <position>20,366</position>
-	       <renderLayer>4</renderLayer>
-	       <spriteSheet>Soldier.png</spriteSheet>
-	       <spriteDimensions>16,20</spriteDimensions>
-	       <desiredDimensions>32,40</desiredDimensions>
-	    </player>
+		<stage>
+			<width>1000</width>
+		</stage>
+		<player>
+			<position>20,366</position>
+			<renderLayer>4</renderLayer>
+			<spriteSheet>Soldier.png</spriteSheet>
+			<spriteDimensions>16,20</spriteDimensions>
+			<desiredDimensions>32,40</desiredDimensions>
+			<walkSpeed>2</walkSpeed>
+		</player>
 		<playList>
 			<song>MadWorld.mp3</song>
 		</playList>
 	</properties>
 	<entities>
 		<entity type="Repeating">
-            <position>0,0</position>
-            <imagePath>textures/Sky.png</imagePath>
-            <u>100</u>
-            <v>0</v>
-            <w>100</w>
-            <h>400</h>
-            <renderLayer>0</renderLayer>
-        </entity>
-        <entity type="Repeating">
-            <position>0,261</position>
-            <imagePath>textures/Trenches.png</imagePath>
-            <u>0</u>
-            <v>0</v>
-            <w>400</w>
-            <h>51</h>
-            <renderLayer>2</renderLayer>
-        </entity>
-        <entity type="Repeating">
-            <position>0,235</position>
-            <imagePath>textures/SandBags.png</imagePath>
-            <u>0</u>
-            <v>0</v>
-            <w>402</w>
-            <h>32</h>
-            <renderLayer>3</renderLayer>
-        </entity>
-        <entity type="Explosion">
-            <minimum>100, 165</minimum>
-            <maximum>1500, 165</maximum>
-            <imagePath>Explosion1.png</imagePath>
-            <frameWidth>50</frameWidth>
-            <frameHeight>100</frameHeight>
-            <frameCount>27</frameCount>
-            <frameDelay>3</frameDelay>
-            <explosionFreq>120</explosionFreq>
-            <renderLayer>1</renderLayer>
-        </entity>
-        <entity type="Explosion">
-            <minimum>100, 165</minimum>
-            <maximum>1500, 165</maximum>
-            <imagePath>Explosion1.png</imagePath>
-            <frameWidth>50</frameWidth>
-            <frameHeight>100</frameHeight>
-            <frameCount>27</frameCount>
-            <frameDelay>3</frameDelay>
-            <explosionFreq>120</explosionFreq>
-            <renderLayer>1</renderLayer>
-        </entity>
+			<position>0,0</position>
+			<imagePath>textures/Sky.png</imagePath>
+			<u>100</u>
+			<v>0</v>
+			<w>100</w>
+			<h>400</h>
+			<renderLayer>0</renderLayer>
+		</entity>
+		<entity type="Repeating">
+			<position>0,261</position>
+			<imagePath>textures/Trenches.png</imagePath>
+			<u>0</u>
+			<v>0</v>
+			<w>400</w>
+			<h>51</h>
+			<renderLayer>2</renderLayer>
+		</entity>
+		<entity type="Repeating">
+			<position>0,235</position>
+			<imagePath>textures/SandBags.png</imagePath>
+			<u>0</u>
+			<v>0</v>
+			<w>402</w>
+			<h>32</h>
+			<renderLayer>3</renderLayer>
+		</entity>
+		<entity type="Explosion">
+			<minimum>100, 165</minimum>
+			<maximum>1500, 165</maximum>
+			<imagePath>Explosion1.png</imagePath>
+			<frameWidth>50</frameWidth>
+			<frameHeight>100</frameHeight>
+			<frameCount>27</frameCount>
+			<frameDelay>3</frameDelay>
+			<explosionFreq>100</explosionFreq>
+			<renderLayer>1</renderLayer>
+		</entity>
+		<entity type="Explosion">
+			<minimum>100, 165</minimum>
+			<maximum>1500, 165</maximum>
+			<imagePath>Explosion1.png</imagePath>
+			<frameWidth>50</frameWidth>
+			<frameHeight>100</frameHeight>
+			<frameCount>27</frameCount>
+			<frameDelay>3</frameDelay>
+			<explosionFreq>120</explosionFreq>
+			<renderLayer>1</renderLayer>
+		</entity>
+		<entity type="Explosion">
+			<minimum>100, 165</minimum>
+			<maximum>1500, 165</maximum>
+			<imagePath>Explosion1.png</imagePath>
+			<frameWidth>50</frameWidth>
+			<frameHeight>100</frameHeight>
+			<frameCount>27</frameCount>
+			<frameDelay>3</frameDelay>
+			<explosionFreq>90</explosionFreq>
+			<renderLayer>1</renderLayer>
+		</entity>
 	</entities>
 </level>

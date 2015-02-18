@@ -1,10 +1,8 @@
 package me.MitchT.AmericanLife.Entities;
 
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 
 import me.MitchT.AmericanLife.Game;
@@ -14,8 +12,7 @@ import me.MitchT.AmericanLife.Components.Component;
 public class PlayerEntity extends Entity implements GameLoopListener
 {
     private int animationFrame = 0;
-    private final int animationSpeed = 20;
-    private final int animationSpeedSprint = 10;
+    private int animationSpeed = 0;
     private int animationCounter = 0;
     private boolean lookDir = true;
     
@@ -23,8 +20,9 @@ public class PlayerEntity extends Entity implements GameLoopListener
     private BufferedImage spriteSheet;
     private Point spriteDimensions;
     private Point desiredDimensions;
+    private int walkSpeed;
     
-    public PlayerEntity(Point position, int renderLayer, BufferedImage spriteSheet, Point spriteDimensions, Point desiredDimensions)
+    public PlayerEntity(Point position, int renderLayer, BufferedImage spriteSheet, Point spriteDimensions, Point desiredDimensions, int walkSpeed)
     {
         super(renderLayer, new Component[] {});
         
@@ -34,6 +32,8 @@ public class PlayerEntity extends Entity implements GameLoopListener
         this.spriteSheet = spriteSheet;
         this.spriteDimensions = spriteDimensions;
         this.desiredDimensions = desiredDimensions;
+        this.walkSpeed = walkSpeed;
+        this.animationSpeed = ((walkSpeed*-10)+50);
     }
     
     public Point getPosition()
@@ -94,7 +94,7 @@ public class PlayerEntity extends Entity implements GameLoopListener
             setAnimationFrame(0);
             animationCounter = animationSpeed;
         }
-        else if(animationCounter >= (keysDown[3] ? animationSpeedSprint : animationSpeed) && (keysDown[0] || keysDown[1]))
+        else if(animationCounter >= animationSpeed && (keysDown[0] || keysDown[1]))
         {
             animationCounter = 0;
             if(getAnimationFrame() == 2)
@@ -110,12 +110,17 @@ public class PlayerEntity extends Entity implements GameLoopListener
                 this.lookDir = true;
             }
         }
-        else if(animationCounter < (keysDown[3] ? animationSpeedSprint : animationSpeed))
+        else if(animationCounter < animationSpeed)
             animationCounter++;
     }
     
     @Override
     public void render()
     {
+    }
+    
+    public int getWalkSpeed()
+    {
+        return this.walkSpeed;
     }
 }
